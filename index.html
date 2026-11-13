@@ -50,57 +50,24 @@ en:{title:"Mauritanian Local Market",search:"Search a product...",all:"All",allC
 };
 
 // قائمة المنتجات: لإضافة منتج انسخ كتلة بين { } وضع فاصلة بعدها
-// img:""IMG-20260925-WA0018.jpg)
+// img: اسم ملف الصورة المرفوع في المستودع (اتركه "" إن لم توجد صورة)
 // city: nkc = نواكشوط ، ndb = نواذيبو
 // place: اسم الحي (اتركه "" إن لم تردّه)
 const products=[
 {
 name:{ar:"هاتف مستعمل",fr:"Téléphone d'occasion",en:"Used phone"},
 desc:{ar:"حالة جيدة",fr:"Bon état",en:"Good condition"},
-price:8000,cat:"phones",city:"nkc",place:"تفرغ زينة",img:"",phone:"222XXXXXXXX"
+price:8000,cat:"phones",city:"nkc",place:"تفرغ زينة",
+img:"IMG-20260925-WA0018.jpg",
+phone:"22244241210"
 },
 {
 name:{ar:"مجموعة سراويل",fr:"Lot de pantalons",en:"Pants set"},
 desc:{ar:"حالة جيدة",fr:"Bon état",en:"Good condition"},
-price:1500,cat:"clothes",city:"ndb",place:"",img:"",phone:"222XXXXXXXX"
+price:1500,cat:"clothes",city:"ndb",place:"",
+img:"",
+phone:"22244241210"
 }
 ];
 
-let lang="ar",cat="all",city="all";
-try{lang=localStorage.getItem("lang")||"ar"}catch(e){}
-
-function render(){
-const t=T[lang];
-document.documentElement.lang=lang;
-document.documentElement.dir=lang==="ar"?"rtl":"ltr";
-document.getElementById("title").textContent=t.title;
-const s=document.getElementById("search");
-s.placeholder=t.search;
-const q=s.value.toLowerCase();
-
-document.getElementById("city").innerHTML=["all",...Object.keys(t.cities)].map(c=>
-`<option value="${c}" ${c===city?"selected":""}>${c==="all"?t.allCities:t.cities[c]}</option>`).join("");
-
-const cats=["all",...Object.keys(t.cats)];
-document.getElementById("cats").innerHTML=cats.map(c=>
-`<button class="${c===cat?"on":""}" onclick="setCat('${c}')">${c==="all"?t.all:t.cats[c]}</button>`).join("");
-
-const list=products.filter(p=>
-(cat==="all"||p.cat===cat)&&
-(city==="all"||p.city===city)&&
-(p.name[lang]+" "+p.desc[lang]+" "+p.place).toLowerCase().includes(q));
-
-document.getElementById("list").innerHTML=list.length?list.map(p=>{
-const img=p.img?`<img src="${p.img}" alt="" loading="lazy">`:"";
-const where=t.cities[p.city]+(p.place?" - "+p.place:"");
-const mapUrl="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent((p.place?p.place+" ":"")+T.en.cities[p.city]+" Mauritania");
-return `<div class="item">${img}<h3>${p.name[lang]}</h3><p>${p.desc[lang]}</p><div class="price">${p.price} ${t.cur}</div><div class="place">📍 ${where}</div><a class="btn" href="https://wa.me/${p.phone}">${t.contact}</a><a class="btn map" href="${mapUrl}">${t.map}</a></div>`;
-}).join(""):`<p style="text-align:center">${t.none}</p>`;
-}
-function setCat(c){cat=c;render()}
-function setCity(c){city=c;render()}
-function setLang(l){lang=l;try{localStorage.setItem("lang",l)}catch(e){}render()}
-render();
-</script>
-</body>
-</html>
+let lang="ar"
