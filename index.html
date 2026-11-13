@@ -1,4 +1,70 @@
-let lang="ar",cat="all",city="all";
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0a7d3b">
+<title>سوق موريتاني</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:sans-serif;margin:0;background:#f4f4f4}
+header{background:#0a7d3b;color:#fff;padding:14px;text-align:center}
+header h1{margin:0 0 10px;font-size:20px}
+.langs button{background:#fff;color:#0a7d3b;border:0;padding:6px 12px;border-radius:6px;margin:0 3px;font-weight:bold}
+.tools{padding:12px}
+#search,#city{width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:16px;background:#fff}
+#city{margin-top:8px}
+.cats{margin-top:10px;overflow-x:auto;white-space:nowrap}
+.cats button{border:1px solid #0a7d3b;background:#fff;color:#0a7d3b;padding:6px 14px;border-radius:20px;margin:0 3px}
+.cats button.on{background:#0a7d3b;color:#fff}
+.item{background:#fff;margin:12px;padding:14px;border-radius:10px}
+.item img{width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:8px;background:#ddd}
+.item h3{margin:0 0 6px}
+.place{color:#555;font-size:14px;margin:6px 0}
+.price{color:#0a7d3b;font-weight:bold}
+a.btn{display:inline-block;margin:10px 4px 0 0;background:#25d366;color:#fff;padding:10px 16px;border-radius:8px;text-decoration:none}
+a.map{background:#1a73e8}
+</style>
+</head>
+<body>
+<header>
+<h1 id="title"></h1>
+<div class="langs">
+<button onclick="setLang('ar')">العربية</button>
+<button onclick="setLang('fr')">Français</button>
+<button onclick="setLang('en')">English</button>
+</div>
+</header>
+<div class="tools">
+<input id="search" oninput="render()">
+<select id="city" onchange="setCity(this.value)"></select>
+<div class="cats" id="cats"></div>
+</div>
+<div id="list"></div>
+
+<script>
+const T={
+ar:{title:"سوق موريتاني محلي",search:"ابحث عن منتج...",all:"الكل",allCities:"كل المدن",contact:"واتساب",map:"الخريطة",cur:"أوقية",none:"لا توجد نتائج",cats:{phones:"هواتف",clothes:"ملابس",other:"أخرى"},cities:{nkc:"نواكشوط",ndb:"نواذيبو"}},
+fr:{title:"Marché local mauritanien",search:"Rechercher un produit...",all:"Tout",allCities:"Toutes les villes",contact:"WhatsApp",map:"Carte",cur:"MRU",none:"Aucun résultat",cats:{phones:"Téléphones",clothes:"Vêtements",other:"Autres"},cities:{nkc:"Nouakchott",ndb:"Nouadhibou"}},
+en:{title:"Mauritanian Local Market",search:"Search a product...",all:"All",allCities:"All cities",contact:"WhatsApp",map:"Map",cur:"MRU",none:"No results",cats:{phones:"Phones",clothes:"Clothes",other:"Other"},cities:{nkc:"Nouakchott",ndb:"Nouadhibou"}}
+};
+
+const products=[
+{
+name:{ar:"هاتف مستعمل",fr:"Téléphone d'occasion",en:"Used phone"},
+desc:{ar:"حالة جيدة",fr:"Bon état",en:"Good condition"},
+price:8000,cat:"phones",city:"nkc",place:"تفرغ زينة",
+img:"IMG-20260925-WA0018.jpg",
+phone:"22244241210"
+},
+{
+name:{ar:"مجموعة سراويل",fr:"Lot de pantalons",en:"Pants set"},
+desc:{ar:"حالة جيدة",fr:"Bon état",en:"Good condition"},
+price:1500,cat:"clothes",city:"ndb",place:"",
+img:"",
+phone:"22244241210"
+}
+];let lang="ar",cat="all",city="all";
 try{lang=localStorage.getItem("lang")||"ar"}catch(e){}
 
 function render(){
