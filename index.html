@@ -20,8 +20,9 @@ header h1::after{content:"";display:block;width:56px;height:4px;background:#f2b7
 .bar{margin-top:10px}
 .bar button{background:#fff;color:#0a7d3b;border:0;padding:8px 16px;border-radius:20px;margin:4px 3px;font-weight:bold;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
 .bar button:active{transform:scale(.96)}
+.bar .moreBtn{background:#f2b705;color:#07672f;font-size:20px;line-height:1;padding:5px 15px 9px}
 
-.tools,#list{max-width:700px;margin-left:auto;margin-right:auto}
+.tools,#list{max-width:900px;margin-left:auto;margin-right:auto}
 .tools{padding:0 14px 6px;margin-top:-22px;position:relative}
 #search,#city{width:100%;padding:14px 16px;border:0;border-radius:14px;font-size:16px;background:#fff;box-shadow:0 3px 12px rgba(0,0,0,.10);color:#1b2b21}
 #search::placeholder{color:#8a958e}
@@ -32,15 +33,18 @@ header h1::after{content:"";display:block;width:56px;height:4px;background:#f2b7
 .cats button{border:1.5px solid #0a7d3b;background:#fff;color:#0a7d3b;padding:8px 16px;border-radius:20px;margin:0 3px;font-size:14px;font-weight:600}
 .cats button.on{background:#0a7d3b;color:#fff;box-shadow:0 3px 8px rgba(10,125,59,.35)}
 
-.item{background:#fff;margin:14px;padding:12px;border-radius:18px;box-shadow:0 3px 12px rgba(10,125,59,.10);border:1px solid #e6eee8}
-.item img{width:100%;height:200px;object-fit:cover;border-radius:12px;margin-bottom:10px;background:#e3e9e5}
-.item h3{margin:0 0 6px;font-size:18px;color:#14241a}
-.place{color:#5f6b64;font-size:14px;margin:6px 0}
-.price{display:inline-block;background:#e6f6ec;color:#0a7d3b;font-weight:bold;font-size:16px;padding:4px 14px;border-radius:20px}
-a.btn{display:inline-block;margin:12px 0 0 6px;background:#25d366;color:#fff;padding:11px 18px;border-radius:12px;text-decoration:none;font-weight:bold;box-shadow:0 3px 8px rgba(37,211,102,.35)}
+#list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px 12px 30px}
+@media(min-width:720px){#list{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.item{background:#fff;margin:0;padding:10px;border-radius:16px;box-shadow:0 3px 12px rgba(10,125,59,.10);border:1px solid #e6eee8;overflow-wrap:anywhere}
+.item img{width:100%;height:auto;aspect-ratio:1/1;object-fit:contain;border-radius:12px;margin-bottom:8px;background:#f3f6f4}
+.item h3{margin:0 0 4px;font-size:16px;color:#14241a}
+.item p{margin:4px 0;font-size:14px;color:#44514a}
+.item .place{color:#5f6b64;font-size:13px;margin:4px 0}
+.price{display:inline-block;background:#e6f6ec;color:#0a7d3b;font-weight:bold;font-size:14px;padding:3px 12px;border-radius:20px}
+a.btn{display:block;width:100%;text-align:center;margin:8px 0 0;background:#25d366;color:#fff;padding:10px 12px;border-radius:12px;text-decoration:none;font-weight:bold;font-size:14px;box-shadow:0 3px 8px rgba(37,211,102,.35)}
 a.map{background:#1a73e8;box-shadow:0 3px 8px rgba(26,115,232,.35)}
-.del{margin:12px 0 0 6px;background:#fdecee;color:#b00020;border:1px solid #f3c2c8;padding:11px 18px;border-radius:12px;font-weight:bold}
-.msg{text-align:center;padding:30px 20px;color:#6b756f;font-size:16px}
+.del{display:block;width:100%;margin:8px 0 0;background:#fdecee;color:#b00020;border:1px solid #f3c2c8;padding:10px 12px;border-radius:12px;font-weight:bold;font-size:14px}
+.msg{grid-column:1/-1;text-align:center;padding:30px 20px;color:#6b756f;font-size:16px}
 
 #modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(10,30,18,.55);z-index:10;overflow:auto}
 .box{background:#fff;margin:40px 14px;padding:20px 16px 16px;border-radius:20px;position:relative;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:500px}
@@ -50,6 +54,14 @@ a.map{background:#1a73e8;box-shadow:0 3px 8px rgba(26,115,232,.35)}
 .box button.alt{background:#eef2ef;color:#2b3a31}
 .box button.x{position:absolute;top:8px;left:8px;width:38px;height:38px;padding:0;margin:0;border-radius:50%;background:#eef2ef;color:#333;font-size:18px}
 .note{color:#b00020;margin-top:8px;font-size:14px}
+
+#more{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(10,30,18,.55);z-index:20}
+#moresheet{position:absolute;left:0;right:0;bottom:0;max-width:600px;margin:0 auto;background:#fff;border-radius:22px 22px 0 0;padding:14px 14px 18px;box-shadow:0 -6px 24px rgba(0,0,0,.2)}
+.mh{font-weight:800;font-size:17px;color:#07672f;padding:4px 6px 10px}
+.mrow{display:flex;align-items:center;gap:14px;width:100%;padding:15px 10px;border:0;border-bottom:1px solid #eef2ef;background:none;font-size:16px;color:#1b2b21;text-align:start}
+.mrow span{font-size:22px}
+.mclose{justify-content:center;border:0;margin-top:8px;background:#eef2ef;border-radius:12px;font-weight:bold}
+#toast{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:90px;background:#14241a;color:#fff;padding:10px 20px;border-radius:22px;z-index:30;font-size:14px}
 </style>
 </head>
 <body>
@@ -59,6 +71,7 @@ a.map{background:#1a73e8;box-shadow:0 3px 8px rgba(26,115,232,.35)}
 <button onclick="setLang('ar')">العربية</button>
 <button onclick="setLang('fr')">Français</button>
 <button onclick="setLang('en')">English</button>
+<button class="moreBtn" onclick="openMore()">⋮</button>
 </div>
 <div class="bar" id="acct"></div>
 </header>
@@ -69,7 +82,53 @@ a.map{background:#1a73e8;box-shadow:0 3px 8px rgba(26,115,232,.35)}
 </div>
 <div id="list"></div>
 <div id="modal"><div class="box"><button class="x" onclick="closeModal()">✕</button><div id="modalbody"></div></div></div>
+<div id="more"><div id="moresheet"></div></div>
+<div id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app.js"></script>
+<script>
+(function(){
+var T={
+ar:{t:'خيارات',s:'مشاركة التطبيق',w:'مشاركة عبر واتساب',c:'نسخ الرابط',i:'تثبيت التطبيق',ok:'تم نسخ الرابط',x:'إغلاق'},
+fr:{t:'Options',s:"Partager l'application",w:'Partager sur WhatsApp',c:'Copier le lien',i:"Installer l'application",ok:'Lien copié',x:'Fermer'},
+en:{t:'Options',s:'Share the app',w:'Share on WhatsApp',c:'Copy link',i:'Install the app',ok:'Link copied',x:'Close'}
+};
+var dp=null;
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;});
+window.addEventListener('appinstalled',function(){dp=null;});
+function $(i){return document.getElementById(i);}
+function L(){var s=($('title')||{}).textContent||'';if(/[\u0600-\u06FF]/.test(s))return 'ar';if(/march[eé]/i.test(s))return 'fr';return 'en';}
+function url(){return location.href.split('#')[0].split('?')[0];}
+function ttl(){return ($('title')||{}).textContent||document.title;}
+function toast(m){var t=$('toast');t.textContent=m;t.style.display='block';setTimeout(function(){t.style.display='none';},2200);}
+function row(f,ic,tx){return '<button class="mrow" onclick="'+f+'"><span>'+ic+'</span>'+tx+'</button>';}
+window.openMore=function(){
+var t=T[L()];
+var h='<div class="mh">'+t.t+'</div>'+row('moreShare()','🔗',t.s)+row('moreWa()','💬',t.w)+row('moreCopy()','📋',t.c);
+var app=window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches;
+if(dp&&!app){h+=row('moreInstall()','📲',t.i);}
+h+='<button class="mrow mclose" onclick="closeMore()">'+t.x+'</button>';
+$('moresheet').innerHTML=h;
+$('more').style.display='block';
+};
+window.closeMore=function(){$('more').style.display='none';};
+window.moreShare=function(){
+if(navigator.share){navigator.share({title:ttl(),text:ttl(),url:url()}).catch(function(){});closeMore();}
+else{window.moreCopy();}
+};
+window.moreWa=function(){
+window.open('https://wa.me/?text='+encodeURIComponent(ttl()+' '+url()),'_blank');
+closeMore();
+};
+window.moreCopy=function(){
+var u=url(),t=T[L()];
+function done(){closeMore();toast(t.ok);}
+function fb(){var a=document.createElement('textarea');a.value=u;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(a);done();}
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(done,fb);}else{fb();}
+};
+window.moreInstall=function(){closeMore();if(dp){dp.prompt();dp=null;}};
+$('more').addEventListener('click',function(e){if(e.target===this)closeMore();});
+})();
+</script>
 </body>
 </html>
