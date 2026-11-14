@@ -1,13 +1,14 @@
 {
-  "name": "سوق",
-  "short_name": "سوق",
+  "name": "المرصة",
+  "short_name": "المرصة",
+  "description": "سوق موريتاني محلي",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#168050",
+  "background_color": "#07672f",
+  "theme_color": "#0a7d3b",
   "icons": [
     {
       "src": "icon.svg",
