@@ -53,13 +53,20 @@
 }
 
     #sp p {
-      margin: 10px 0 0;
-      font-size: 17px;
-      color: #d6efdf;
-      font-family: Tahoma, "Segoe UI", sans-serif;
-      opacity: 0;
-      animation: spUp .7s ease .7s forwards;
-    }
+  position: absolute;
+  bottom: 8vh;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: #d6efdf;
+  font-family: Tahoma, "Segoe UI", sans-serif;
+  z-index: 2;
+  opacity: 0;
+  animation: spUp .7s ease .7s forwards;
+}
 
     @keyframes spOut {
       to { opacity: 0; visibility: hidden; }
