@@ -15,17 +15,20 @@
 
   var css = `
     #sp {
-      position: fixed;
-      inset: 0;
-      z-index: 99999;
-      background: linear-gradient(160deg, #064d23, #0d9a4a);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      direction: rtl;
-      animation: spOut .5s ease 2.7s forwards;
-    }
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: linear-gradient(160deg, #064d23, #0d9a4a);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  direction: rtl;
+  gap: 18px;
+  padding: 20px;
+  box-sizing: border-box;
+  animation: spOut .5s ease 2.7s forwards;
+}
 
   #sp img {
   width: min(85vw, 400px);
