@@ -16,7 +16,20 @@ body{font-family:"Segoe UI",Tahoma,"Noto Sans Arabic",system-ui,sans-serif;margi
 button,input,select,textarea{font-family:inherit}
 button{cursor:pointer}
 
-header{background:linear-gradient(135deg,#07672f,#0d9a4a);color:#fff;padding:22px 14px 40px;text-align:center;border-radius:0 0 28px 28px;box-shadow:0 6px 18px rgba(10,125,59,.25)}
+
+header{
+  position:relative;
+  background:
+    radial-gradient(circle at 15% 20%,rgba(214,173,75,.16),transparent 35%),
+    linear-gradient(145deg,#052f20,#075b35 60%,#087b43);
+  color:#fff;
+  padding:28px 14px 42px;
+  text-align:center;
+  border-radius:0 0 30px 30px;
+  border-bottom:3px solid #d6ad4b;
+  box-shadow:0 8px 25px rgba(5,47,32,.22);
+}
+  
 header h1{margin:0 0 14px;font-size:26px;font-weight:800}
 header h1::after{content:"";display:block;width:56px;height:4px;background:#f2b705;border-radius:4px;margin:8px auto 0}
 .bar{margin-top:10px}
