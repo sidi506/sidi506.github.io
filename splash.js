@@ -27,7 +27,7 @@
   gap: 18px;
   padding: 20px;
   box-sizing: border-box;
-  animation: spOut .5s ease 2.7s forwards;
+  animation: spOut .5s ease 4.7s forwards;
 }
 
   #sp img {
