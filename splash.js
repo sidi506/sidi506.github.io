@@ -80,8 +80,9 @@
   el.id = "sp";
 
   var img = document.createElement("img");
-  img.src = "./file_00000000633081f48fe9f68514d3da35.png";
-  img.alt = "المرصة";
+img.src = "./file_00000000633081f48fe9f68514d3da35.png";
+img.alt = "المرصة";
+img.style.cssText = "position:absolute;inset:0;width:100%;height:100%;max-height:none;object-fit:cover;border-radius:0;opacity:1;";
 
   var title = document.createElement("h1");
   title.textContent = "المرصة";
