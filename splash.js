@@ -90,9 +90,9 @@ img.style.cssText = "position:absolute;inset:0;width:100%;height:100%;max-height
   var subtitle = document.createElement("p");
   subtitle.textContent = sub[l];
 
-  el.appendChild(img);
-  el.appendChild(title);
-  el.appendChild(subtitle);
+el.appendChild(title);
+el.appendChild(img);
+el.appendChild(subtitle);
 
   el.onclick = function () {
     el.remove();
