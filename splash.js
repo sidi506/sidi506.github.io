@@ -27,14 +27,16 @@
       animation: spOut .5s ease 2.7s forwards;
     }
 
-    #sp img {
-      width: min(90vw, 440px);
-      max-height: 65vh;
-      object-fit: contain;
-      border-radius: 18px;
-      opacity: 0;
-      animation: spUp .8s ease .15s forwards;
-    }
+  #sp img {
+  width: min(85vw, 400px);
+  height: 45vh;
+  max-height: 45vh;
+  object-fit: contain;
+  border-radius: 18px;
+  opacity: 0;
+  flex-shrink: 0;
+  animation: spUp .8s ease .15s forwards;
+}
 
     #sp h1 {
   position: absolute;
