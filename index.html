@@ -176,7 +176,7 @@ function toast(m){var t=$('toast');t.textContent=m;t.style.display='block';setTi
 function row(f,ic,tx){return '<button class="mrow" onclick="'+f+'"><span>'+ic+'</span>'+tx+'</button>';}
 window.openMore=function(){
 var t=T[L()];
-var h='<div class="mh">'+t.t+'</div>'+row('moreShare()','🔗',t.s)+row('moreWa()','💬',t.w)+row('moreCopy()','📋',t.c);
+var h='<div class="mh">'+t.t+'</div>'+row("setLang('ar');closeMore()","🌐 العربية",'العربية')+row("setLang('fr');closeMore()","🌐 Français",'Français')+row("setLang('en');closeMore()","🌐 English",'English')+row('moreShare()','🔗',t.s)+row('moreWa()','💬',t.w)+row('moreCopy()','📋',t.c);
 var app=window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches;
 if(dp&&!app){h+=row('moreInstall()','📲',t.i);}
 h+='<button class="mrow mclose" onclick="closeMore()">'+t.x+'</button>';
