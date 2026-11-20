@@ -100,7 +100,27 @@ a.map{background:#1a73e8;box-shadow:0 3px 8px rgba(26,115,232,.35)}
   outline:none;
   border-color:#d6ad4b;
   box-shadow:0 0 0 3px rgba(214,173,75,.16);
-  }</style>
+  }.cats button{
+  border:1px solid #dce8df;
+  background:linear-gradient(145deg,#fff,#f7faf7);
+  color:#075b35;
+  padding:9px 18px;
+  border-radius:25px;
+  font-weight:700;
+  transition:all .25s ease;
+}
+
+.cats button.on{
+  background:linear-gradient(135deg,#064d2b,#0a7d3b);
+  color:#fff;
+  border:1px solid #d6ad4b;
+  box-shadow:0 4px 12px rgba(5,77,43,.22);
+  transform:translateY(-2px);
+}
+
+.cats button:active{
+  transform:scale(.95);
+}</style>
 </head>
 <body>
 <header>
