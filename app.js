@@ -15,19 +15,48 @@ if(!T[lang])lang="ar";
 
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 
+
 function card(p){
 const t=T[lang];
 const img=p.image_url?`<img src="${esc(p.image_url)}" alt="" loading="lazy">`:"";
 const cn=t.cities[p.city]||"";
 const where=cn+(p.place?(cn?" - ":"")+p.place:"");
+const mine=user&&p.user_id===user.id?`<button class="del" onclick="event.stopPropagation();delProduct('${esc(p.id)}')">${t.del}</button>`:"";
+
+return `<div class="item" onclick="openProduct('${esc(p.id)}')">
+${img}
+<h3>${esc(p.title)}</h3>
+<div class="price">${esc(p.price)} ${t.cur}</div>
+<div class="place">📍 ${esc(where)}</div>
+${mine}
+</div>`;
+}
+
+
+window.openProduct=function(id){
+const p=products.find(x=>String(x.id)===String(id));
+if(!p)return;
+
+const t=T[lang];
+const cn=t.cities[p.city]||"";
+const where=cn+(p.place?(cn?" - ":"")+p.place:"");
 const cityEn=T.en.cities[p.city]||"";
 const mapUrl="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent((p.place?p.place+" ":"")+cityEn+" Mauritania");
 const phone=String(p.phone||"").replace(/\D/g,"");
-const mine=user&&p.user_id===user.id?`<button class="del" onclick="delProduct('${esc(p.id)}')">${t.del}</button>`:"";
-return `<div class="item">${img}<h3>${esc(p.title)}</h3><p>${esc(p.description)}</p><div class="price">${esc(p.price)} ${t.cur}</div><div class="place">📍 ${esc(where)}</div><a class="btn" href="https://wa.me/${phone}">${t.contact}</a><a class="btn map" href="${mapUrl}">${t.map}</a>${mine}</div>`;
-}
 
-function renderUser(){
+$("modalbody").innerHTML=`
+<div class="product-details">
+${p.image_url?`<img src="${esc(p.image_url)}" style="width:100%;max-height:300px;object-fit:contain;border-radius:12px">`:""}
+<h2>${esc(p.title)}</h2>
+<p>${esc(p.description||"")}</p>
+<div class="price">${esc(p.price)} ${t.cur}</div>
+<div class="place">📍 ${esc(where)}</div>
+${phone?`<a class="btn" target="_blank" rel="noopener" href="https://wa.me/${phone}">${t.contact}</a>`:""}
+<a class="btn map" target="_blank" rel="noopener" href="${mapUrl}">${t.map}</a>
+</div>`;
+
+$("modal").style.display="flex";
+};function renderUser(){
 const t=T[lang];
 $("acct").innerHTML=user?`<button onclick="openModal()">${t.add}</button><button onclick="logout()">${t.logout}</button>`:`<button onclick="openModal()">${t.login}</button>`;
 }
