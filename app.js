@@ -247,4 +247,61 @@ if($("modal").style.display==="block")renderModal();
 
 render();
 loadProducts();
+// ===== نظام المتاجر =====
+
+let stores = [];
+
+function storeCard(s){
+const t=T[lang];
+const cn=t.cities[s.city]||s.city||"";
+const logo=s.logo_url
+?`<img src="${esc(s.logo_url)}" alt="">`
+:`<div class="store-logo">🏬</div>`;
+
+return `
+<div class="store-card">
+${logo}
+<h3>${esc(s.store_name)}</h3>
+<p>📍 ${esc(cn)}</p>
+</div>`;
+}
+
+function renderStores(){
+const box=$("storesList");
+if(!box)return;
+
+if(!stores.length){
+box.innerHTML='<p class="msg">لا توجد متاجر منشورة حالياً</p>';
+return;
+}
+
+box.innerHTML=stores.slice(0,8).map(storeCard).join("");
+}
+
+async function loadStores(){
+const r=await sb.from("seller_stores")
+.select("*")
+.eq("is_published",true)
+.order("created_at",{ascending:false})
+.limit(100);
+
+stores=r.error?[]:r.data;
+renderStores();
+}
+
+window.showAllStores=function(){
+if(!stores.length)return;
+
+$("modalbody").innerHTML=`
+<h2>جميع المتاجر</h2>
+<div class="all-stores">
+${stores.map(storeCard).join("")}
+</div>`;
+
+$("modal").style.display="block";
+};
+
+// ===== نهاية نظام المتاجر =====
+
+loadStores();
 // END
