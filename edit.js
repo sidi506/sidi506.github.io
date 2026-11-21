@@ -16,7 +16,7 @@ function tx(){return E[lang]||E.ar;}
 window.card=function(p){
 var h=_card(p);
 if(user&&p.user_id===user.id){
-var b='<button class="edit" onclick="editProduct(\''+esc(p.id)+'\')">'+tx().edit+'</button>';
+var b='<button class="edit" onclick="event.stopPropagation();editProduct(\''+esc(p.id)+'\')">'+tx().edit+'</button>';
 h=h.replace('<button class="del"',function(m){return b+m;});
 }
 return h;
