@@ -44,9 +44,27 @@ const cityEn=T.en.cities[p.city]||"";
 const mapUrl="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent((p.place?p.place+" ":"")+cityEn+" Mauritania");
 const phone=String(p.phone||"").replace(/\D/g,"");
 
+const images=Array.isArray(p.image_urls)&&p.image_urls.length
+?p.image_urls.filter(Boolean)
+:(p.image_url?[p.image_url]:[]);
+
+window.productImages=images;
+window.productImageIndex=0;
+
+const gallery=images.length?`
+<div style="text-align:center">
+<img id="productMainImage" src="${esc(images[0])}" alt="${esc(p.title)}" style="width:100%;max-height:300px;object-fit:contain;border-radius:12px">
+${images.length>1?`
+<div style="display:flex;justify-content:center;align-items:center;gap:20px;margin:12px">
+<button onclick="showProductImage(-1)">❮</button>
+<span id="productImageCount">1 / ${images.length}</span>
+<button onclick="showProductImage(1)">❯</button>
+</div>`:""}
+</div>`:"";
+
 $("modalbody").innerHTML=`
 <div class="product-details">
-${p.image_url?`<img src="${esc(p.image_url)}" style="width:100%;max-height:300px;object-fit:contain;border-radius:12px">`:""}
+${gallery}
 <h2>${esc(p.title)}</h2>
 <p>${esc(p.description||"")}</p>
 <div class="price">${esc(p.price)} ${t.cur}</div>
@@ -56,7 +74,18 @@ ${phone?`<a class="btn" target="_blank" rel="noopener" href="https://wa.me/${pho
 </div>`;
 
 $("modal").style.display="flex";
-};function renderUser(){
+};
+
+window.showProductImage=function(direction){
+const images=window.productImages;
+if(!images||!images.length)return;
+
+window.productImageIndex=(window.productImageIndex+direction+images.length)%images.length;
+
+$("productMainImage").src=images[window.productImageIndex];
+$("productImageCount").textContent=(window.productImageIndex+1)+" / "+images.length;
+};
+  function renderUser(){
 const t=T[lang];
 $("acct").innerHTML=user?`<button onclick="openModal()">${t.add}</button><button onclick="logout()">${t.logout}</button>`:`<button onclick="openModal()">${t.login}</button>`;
 }
@@ -89,7 +118,7 @@ $("modalbody").innerHTML=user?
 <input name="pplace" placeholder="${t.pplace}" maxlength="60">
 <input name="pphone" type="tel" placeholder="${t.pphone}" required>
 <label>${t.pimg}</label>
-<input name="pimage" type="file" accept="image/*">
+<input name="pimages" type="file" accept="image/*" multiple>
 <button type="submit">${t.save}</button></form><div id="note" class="note"></div>`
 :
 `<h2>${t.login}</h2>
@@ -132,6 +161,7 @@ img.src=URL.createObjectURL(file);
 });
 }
 
+
 async function addProduct(ev){
 ev.preventDefault();
 const t=T[lang];
@@ -139,27 +169,57 @@ const f=ev.target;
 const g=n=>f.elements[n].value;
 const phone=g("pphone").replace(/\D/g,"");
 if(phone.length<8){$("note").textContent=t.errPhone;return}
-const btn=f.querySelector("button");
-btn.disabled=true;btn.textContent=t.saving;
-try{
-let image_url=null;
-const file=f.elements["pimage"].files[0];
-if(file){
-const blob=await resize(file);
-const path=user.id+"/"+Date.now()+".jpg";
-const up=await sb.storage.from("product-images").upload(path,blob,{contentType:"image/jpeg"});
-if(up.error)throw up.error;
-image_url=sb.storage.from("product-images").getPublicUrl(path).data.publicUrl;
+
+const files=Array.from(f.elements["pimages"].files);
+if(files.length>5){
+$("note").textContent="الحد الأقصى 5 صور";
+return;
 }
-const ins=await sb.from("products").insert({title:g("ptitle").trim(),description:g("pdesc").trim(),price:Number(g("pprice")),category:g("pcat"),city:g("pcity"),place:g("pplace").trim(),phone:phone,image_url:image_url});
+
+const btn=f.querySelector("button");
+btn.disabled=true;
+btn.textContent=t.saving;
+
+try{
+const image_urls=[];
+
+for(let i=0;i<files.length;i++){
+const blob=await resize(files[i]);
+const path=user.id+"/"+Date.now()+"-"+i+".jpg";
+
+const up=await sb.storage.from("product-images").upload(
+path,blob,{contentType:"image/jpeg"}
+);
+if(up.error)throw up.error;
+
+const url=sb.storage.from("product-images").getPublicUrl(path).data.publicUrl;
+image_urls.push(url);
+}
+
+const ins=await sb.from("products").insert({
+title:g("ptitle").trim(),
+description:g("pdesc").trim(),
+price:Number(g("pprice")),
+category:g("pcat"),
+city:g("pcity"),
+place:g("pplace").trim(),
+phone:phone,
+image_url:image_urls[0]||null,
+image_urls:image_urls
+});
+
 if(ins.error)throw ins.error;
+
 closeModal();
 await loadProducts();
+
 }catch(e){
 $("note").textContent=t.errNet+" ("+(e.message||"")+")";
-btn.disabled=false;btn.textContent=t.save;
+btn.disabled=false;
+btn.textContent=t.save;
 }
 }
+  
 
 async function delProduct(id){
 if(!confirm(T[lang].confirmDel))return;
