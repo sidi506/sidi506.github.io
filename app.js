@@ -239,6 +239,20 @@ products=r.error?[]:r.data;
 render();
 }
 
+
+async function checkAdmin(){
+isAdmin=false;
+if(!user)return;
+
+const r=await sb.from("user_roles")
+.select("user_id")
+.eq("user_id",user.id)
+.maybeSingle();
+
+isAdmin=!r.error&&!!r.data;
+render();
+}
+
 sb.auth.onAuthStateChange((e,s)=>{
 user=s?s.user:null;
 render();
