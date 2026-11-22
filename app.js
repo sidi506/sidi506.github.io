@@ -88,6 +88,7 @@ $("productImageCount").textContent=(window.productImageIndex+1)+" / "+images.len
   
 
 
+
 async function openAdmin(){
 if(!isAdmin)return;
 
@@ -110,22 +111,66 @@ const s=r.data[0];
 
 $("adminStats").innerHTML=`
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px">
-<div style="padding:18px;background:#e8f5e9;border-radius:12px">
+
+<div onclick="adminShowUsers()" style="cursor:pointer;padding:18px;background:#e8f5e9;border-radius:12px">
 <h3>👥 المستخدمون</h3>
 <strong>${s.users_count}</strong>
+<p>اضغط لعرض المسجلين ←</p>
 </div>
+
 <div style="padding:18px;background:#e3f2fd;border-radius:12px">
 <h3>📦 المنتجات</h3>
 <strong>${s.products_count}</strong>
 </div>
+
 <div style="padding:18px;background:#fff3e0;border-radius:12px">
 <h3>🏪 المتاجر</h3>
 <strong>${s.stores_count}</strong>
 </div>
+
 </div>
 `;
 }
-window.openAdmin = openAdmin;
+
+window.openAdmin=openAdmin;
+
+window.adminShowUsers=async function(){
+if(!isAdmin)return;
+
+$("list").innerHTML=`
+<div style="padding:20px">
+<h2>👥 المستخدمون المسجلون</h2>
+<p>جارٍ تحميل المستخدمين...</p>
+</div>
+`;
+
+const r=await sb.rpc("admin_list_users");
+
+if(r.error){
+$("list").innerHTML=`
+<div style="padding:20px">
+<p>تعذر تحميل المستخدمين: ${esc(r.error.message)}</p>
+<button onclick="openAdmin()">عودة</button>
+</div>`;
+return;
+}
+
+const users=r.data||[];
+
+$("list").innerHTML=`
+<div style="padding:20px">
+<button onclick="openAdmin()">⬅ العودة للوحة المدير</button>
+<h2>👥 المستخدمون (${users.length})</h2>
+${users.length?users.map(u=>`
+<div style="padding:14px;margin:10px 0;background:#e8f5e9;border-radius:10px;direction:ltr;text-align:left">
+<strong>${esc(u.email||"بدون بريد")}</strong>
+<p>تاريخ التسجيل: ${esc(u.created_at||"")}</p>
+</div>
+`).join(""):'<p>لا يوجد مستخدمون</p>'}
+</div>
+`;
+};
+
 
 function renderUser(){
 const t=T[lang];
