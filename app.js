@@ -87,6 +87,45 @@ $("productImageCount").textContent=(window.productImageIndex+1)+" / "+images.len
 };
   
 
+
+async function openAdmin(){
+if(!isAdmin)return;
+
+$("list").innerHTML=`
+<div style="padding:20px">
+<h2>👑 لوحة تحكم المدير</h2>
+<p>مرحباً بك في إدارة المرصة</p>
+<div id="adminStats">جارٍ تحميل الإحصائيات...</div>
+</div>
+`;
+
+const r=await sb.rpc("admin_dashboard_stats");
+
+if(r.error){
+$("adminStats").textContent="تعذر تحميل الإحصائيات: "+r.error.message;
+return;
+}
+
+const s=r.data[0];
+
+$("adminStats").innerHTML=`
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px">
+<div style="padding:18px;background:#e8f5e9;border-radius:12px">
+<h3>👥 المستخدمون</h3>
+<strong>${s.users_count}</strong>
+</div>
+<div style="padding:18px;background:#e3f2fd;border-radius:12px">
+<h3>📦 المنتجات</h3>
+<strong>${s.products_count}</strong>
+</div>
+<div style="padding:18px;background:#fff3e0;border-radius:12px">
+<h3>🏪 المتاجر</h3>
+<strong>${s.stores_count}</strong>
+</div>
+</div>
+`;
+}
+
 function renderUser(){
 const t=T[lang];
 
