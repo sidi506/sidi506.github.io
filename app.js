@@ -86,17 +86,19 @@ $("productMainImage").src=images[window.productImageIndex];
 $("productImageCount").textContent=(window.productImageIndex+1)+" / "+images.length;
 };
   
+
 function renderUser(){
 const t=T[lang];
 
 $("acct").innerHTML=user?
 `
-${isAdmin?'<span style="background:#d4edda;color:#155724;padding:7px 12px;border-radius:20px;font-weight:bold">👑 المدير</span>':""}
+${isAdmin?'<span style="background:#d4edda;color:#155724;padding:7px 12px;border-radius:20px;font-weight:bold">👑 المدير</span><button onclick="openAdmin()">لوحة التحكم</button>':""}
 <button onclick="openModal()">${t.add}</button>
 <button onclick="logout()">${t.logout}</button>
 `:
 `<button onclick="openModal()">${t.login}</button>`;
 }
+
 
 
 function render(){
