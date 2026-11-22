@@ -125,6 +125,7 @@ $("adminStats").innerHTML=`
 </div>
 `;
 }
+window.openAdmin = openAdmin;
 
 function renderUser(){
 const t=T[lang];
