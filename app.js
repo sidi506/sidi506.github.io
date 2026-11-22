@@ -9,7 +9,7 @@ fr:{title:"Marché local mauritanien",search:"Rechercher un produit...",all:"Tou
 en:{title:"Mauritanian Local Market",search:"Search a product...",all:"All",allCities:"All cities",contact:"WhatsApp",map:"Map",cur:"MRU",none:"No results",loading:"Loading...",login:"Log in",signup:"Sign up",logout:"Log out",email:"Email",pass:"Password (min. 6 characters)",add:"Add a product",pname:"Product name",pdesc:"Description",pprice:"Price",pplace:"Area (optional)",pphone:"WhatsApp number (e.g. 22244241210)",pimg:"Product photo",save:"Publish",saving:"Publishing...",del:"Delete",confirmDel:"Delete this product?",errNet:"Something went wrong, try again",errPhone:"Invalid WhatsApp number",checkMail:"Account created. Check your email to confirm it, then log in.",cats:{phones:"Phones",clothes:"Clothes",other:"Other"},cities:{nkc:"Nouakchott",ndb:"Nouadhibou"}}
 };
 
-let lang="ar",cat="all",city="all",products=null,user=null;
+let lang="ar",cat="all",city="all",products=null,user=null,isAdmin=false;
 try{lang=localStorage.getItem("lang")||"ar"}catch(e){}
 if(!T[lang])lang="ar";
 
