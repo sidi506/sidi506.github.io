@@ -118,9 +118,11 @@ $("adminStats").innerHTML=`
 <p>اضغط لعرض المسجلين ←</p>
 </div>
 
-<div style="padding:18px;background:#e3f2fd;border-radius:12px">
+
+<div onclick="adminShowProducts()" style="cursor:pointer;padding:18px;background:#e3f2fd;border-radius:12px">
 <h3>📦 المنتجات</h3>
 <strong>${s.products_count}</strong>
+<p>اضغط لإدارة المنتجات ←</p>
 </div>
 
 <div style="padding:18px;background:#fff3e0;border-radius:12px">
@@ -169,6 +171,66 @@ ${users.length?users.map(u=>`
 `).join(""):'<p>لا يوجد مستخدمون</p>'}
 </div>
 `;
+};
+
+window.adminShowProducts=async function(){
+if(!isAdmin)return;
+
+$("list").innerHTML=`
+<div style="padding:20px">
+<h2>📦 إدارة المنتجات</h2>
+<p>جارٍ تحميل المنتجات...</p>
+</div>
+`;
+
+const r=await sb.from("products")
+.select("*")
+.order("created_at",{ascending:false})
+.limit(200);
+
+if(r.error){
+$("list").innerHTML=`
+<div style="padding:20px">
+<p>تعذر تحميل المنتجات: ${esc(r.error.message)}</p>
+<button onclick="openAdmin()">عودة</button>
+</div>`;
+return;
+}
+
+const items=r.data||[];
+
+$("list").innerHTML=`
+<div style="padding:20px">
+<button onclick="openAdmin()">⬅ العودة للوحة المدير</button>
+<h2>📦 المنتجات (${items.length})</h2>
+
+${items.length?items.map(p=>`
+<div style="padding:14px;margin:12px 0;background:#e3f2fd;border-radius:12px">
+${p.image_url?`<img src="${esc(p.image_url)}" style="width:90px;height:90px;object-fit:cover;border-radius:8px">`:""}
+<h3>${esc(p.title)}</h3>
+<p>${esc(p.price)} أوقية</p>
+<p>${esc(p.description||"")}</p>
+<button onclick="openProduct('${esc(p.id)}')">عرض التفاصيل</button>
+<button style="background:#b71c1c;color:white" onclick="adminDeleteProduct('${esc(p.id)}')">حذف المنتج</button>
+</div>
+`).join(""):'<p>لا توجد منتجات</p>'}
+</div>
+`;
+};
+
+window.adminDeleteProduct=async function(id){
+if(!isAdmin)return;
+if(!confirm("هل تريد حذف هذا المنتج نهائياً؟"))return;
+
+const r=await sb.from("products").delete().eq("id",id);
+
+if(r.error){
+alert("تعذر حذف المنتج: "+r.error.message);
+return;
+}
+
+await loadProducts();
+adminShowProducts();
 };
 
 
