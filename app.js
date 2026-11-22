@@ -255,6 +255,7 @@ render();
 
 sb.auth.onAuthStateChange((e,s)=>{
 user=s?s.user:null;
+  checkAdmin();
 render();
 if($("modal").style.display==="block")renderModal();
 });
