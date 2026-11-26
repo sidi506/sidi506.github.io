@@ -448,8 +448,15 @@ box.innerHTML='<p class="msg">لا توجد متاجر منشورة حالياً
 return;
 }
 
-box.innerHTML=stores.slice(0,8).map(storeCard).join("");
+const featured=stores.filter(s=>s.is_featured);
+const normal=stores.filter(s=>!s.is_featured);
+
+box.innerHTML=[...featured,...normal]
+.slice(0,8)
+.map(storeCard)
+.join("");
 }
+
 
 async function loadStores(){
 const r=await sb.from("seller_stores")
