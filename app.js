@@ -112,10 +112,10 @@ const s=r.data[0];
 $("adminStats").innerHTML=`
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px">
 
-<div onclick="adminShowUsers()" style="cursor:pointer;padding:18px;background:#e8f5e9;border-radius:12px">
-<h3>👥 المستخدمون</h3>
-<strong>${s.users_count}</strong>
-<p>اضغط لعرض المسجلين ←</p>
+<div onclick="adminShowStores()" style="cursor:pointer;padding:18px;background:#fff3e0;border-radius:12px">
+<h3>🏪 المتاجر</h3>
+<strong>${s.stores_count}</strong>
+<p>اضغط لعرض المتاجر ←</p>
 </div>
 
 
