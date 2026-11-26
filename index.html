@@ -677,6 +677,34 @@ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.write
 };
 window.moreInstall=function(){closeMore();if(dp){dp.prompt();dp=null;}};
 $('more').addEventListener('click',function(e){if(e.target===this)closeMore();});
+  // دعم زر الرجوع في أندرويد
+(function(){
+  var more=$('more');
+  var modal=$('modal');
+
+  function isOpen(el){
+    return el && el.style.display==='block';
+  }
+
+  var observer=new MutationObserver(function(){
+    if(isOpen(more)||isOpen(modal)){
+      if(!history.state || !history.state.mersaOverlay){
+        history.pushState({mersaOverlay:true},'',location.href);
+      }
+    }
+  });
+
+  observer.observe(more,{attributes:true,attributeFilter:['style']});
+  observer.observe(modal,{attributes:true,attributeFilter:['style']});
+
+  window.addEventListener('popstate',function(){
+    if(isOpen(more)){
+      window.closeMore();
+    }else if(isOpen(modal)){
+      window.closeModal();
+    }
+  });
+})();
 })();
 </script>
 </body>
