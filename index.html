@@ -505,6 +505,7 @@ $('more').style.display='block';
 window.toggleLangMenu=function(){
 langOpen=!langOpen;
 buildMore();
+};
   window.openNotifications=function(){
 closeMore();
 
@@ -553,7 +554,6 @@ document.body.classList.toggle(
 'dark-mode',
 localStorage.getItem('mersa-theme')==='dark'
 );
-};
 
 window.openMore=function(){
 langOpen=false;
