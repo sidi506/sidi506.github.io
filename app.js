@@ -125,10 +125,6 @@ $("adminStats").innerHTML=`
 <p>اضغط لإدارة المنتجات ←</p>
 </div>
 
-<div style="padding:18px;background:#fff3e0;border-radius:12px">
-<h3>🏪 المتاجر</h3>
-<strong>${s.stores_count}</strong>
-</div>
 
 </div>
 `;
