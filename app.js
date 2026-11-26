@@ -217,6 +217,50 @@ ${p.image_url?`<img src="${esc(p.image_url)}" style="width:90px;height:90px;obje
 </div>
 `;
 };
+window.adminShowStores=async function(){
+if(!isAdmin)return;
+
+$("list").innerHTML=`
+<div onclick="adminShowStores()" style="cursor:pointer;padding:18px;background:#fff3e0;border-radius:12px">
+<h3>🏪 المتاجر</h3>
+<strong>${s.stores_count}</strong>
+<p>اضغط لعرض المتاجر ←</p>
+</div>
+`;
+
+const r=await sb.from("seller_stores")
+.select("*")
+.order("created_at",{ascending:false})
+.limit(200);
+
+if(r.error){
+$("list").innerHTML=`
+<div style="padding:20px">
+<p>تعذر تحميل المتاجر: ${esc(r.error.message)}</p>
+<button onclick="openAdmin()">⬅ العودة</button>
+</div>`;
+return;
+}
+
+const items=r.data||[];
+
+$("list").innerHTML=`
+<div style="padding:20px">
+<button onclick="openAdmin()">⬅ العودة للوحة المدير</button>
+<h2>🏪 المتاجر (${items.length})</h2>
+
+${items.length?items.map(s=>`
+<div style="padding:14px;margin:12px 0;background:#fff3e0;border-radius:12px">
+${s.logo_url?`<img src="${esc(s.logo_url)}" style="width:75px;height:75px;object-fit:cover;border-radius:10px">`:""}
+<h3>${esc(s.store_name)}</h3>
+<p>📍 ${esc(T.ar.cities[s.city]||s.city||"")}</p>
+<p>${s.is_published?"🟢 منشور":"⚪ غير منشور"}</p>
+<p>${s.is_featured?"⭐ متجر مميز":"متجر عادي"}</p>
+</div>
+`).join(""):'<p>لا توجد متاجر مسجلة</p>'}
+</div>
+`;
+};
 
 window.adminDeleteProduct=async function(id){
 if(!isAdmin)return;
