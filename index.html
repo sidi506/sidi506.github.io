@@ -568,6 +568,11 @@ function row(f,ic,tx){return '<button class="mrow" onclick="'+f+'"><span>'+ic+'<
 
 var langOpen=false;
 
+window.closeMore=function(){
+$('more').style.display='none';
+langOpen=false;
+};
+
 function buildMore(){
 var t=T[L()];
 
