@@ -371,9 +371,33 @@ a.map{background:#1a73e8;box-shadow:0 3px 8px rgba(26,115,232,.35)}
 <script>
 (function(){
 var T={
-ar:{t:'خيارات',s:'مشاركة التطبيق',w:'مشاركة عبر واتساب',c:'نسخ الرابط',i:'تثبيت التطبيق',ok:'تم نسخ الرابط',x:'إغلاق'},
-fr:{t:'Options',s:"Partager l'application",w:'Partager sur WhatsApp',c:'Copier le lien',i:"Installer l'application",ok:'Lien copié',x:'Fermer'},
-en:{t:'Options',s:'Share the app',w:'Share on WhatsApp',c:'Copy link',i:'Install the app',ok:'Link copied',x:'Close'}
+ar:{
+t:'إعدادات المرصة',
+s:'مشاركة التطبيق',
+w:'مشاركة عبر واتساب',
+c:'نسخ رابط التطبيق',
+i:'تثبيت التطبيق',
+ok:'تم نسخ الرابط',
+x:'إغلاق'
+},
+fr:{
+t:'Paramètres de Al Mersa',
+s:"Partager l'application",
+w:'Partager sur WhatsApp',
+c:"Copier le lien de l'application",
+i:"Installer l'application",
+ok:'Lien copié',
+x:'Fermer'
+},
+en:{
+t:'Al Mersa Settings',
+s:'Share the app',
+w:'Share via WhatsApp',
+c:'Copy app link',
+i:'Install the app',
+ok:'Link copied',
+x:'Close'
+}
 };
 var dp=null;
 window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e;});
