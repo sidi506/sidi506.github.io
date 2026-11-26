@@ -409,6 +409,7 @@ const r=await sb.from("user_roles")
 
 isAdmin=!r.error&&!!r.data;
 render();
+  renderStores();
 }
 
 sb.auth.onAuthStateChange((e,s)=>{
