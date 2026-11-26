@@ -241,13 +241,24 @@ a.map{background:#1a73e8;box-shadow:0 3px 8px rgba(26,115,232,.35)}
 }</style>
 </head>
 <body>
+
 <header>
-<h1 id="title"></h1>
-<div class="bar">
-<button class="moreBtn" onclick="openMore()">⋮</button>
-</div>
-<div class="bar" id="acct"></div>
+  <div class="top-header">
+    <div class="brand">
+      <span class="brand-icon">🛍️</span>
+      <h1 id="title"></h1>
+    </div>
+
+    <div class="header-actions">
+      <button class="header-icon" aria-label="الإشعارات">🔔</button>
+      <button class="header-icon" aria-label="الإعدادات">⚙️</button>
+      <button class="moreBtn" onclick="openMore()">⋮</button>
+    </div>
+  </div>
+
+  <div class="bar" id="acct"></div>
 </header>
+  
 <div class="tools">
 <input id="search" oninput="render()">
 <select id="city" onchange="setCity(this.value)"></select>
