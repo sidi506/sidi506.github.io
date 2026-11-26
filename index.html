@@ -504,6 +504,24 @@ $('more').style.display='block';
 window.toggleLangMenu=function(){
 langOpen=!langOpen;
 buildMore();
+  window.openNotifications=function(){
+closeMore();
+
+$('modalbody').innerHTML=
+'<div style="text-align:center;padding:15px 5px">'+
+'<div style="font-size:42px;margin-bottom:12px">🔔</div>'+
+'<h2 style="color:#075b35;margin:0 0 12px">الإشعارات</h2>'+
+'<p style="color:#68756d;font-size:15px;line-height:1.9">'+
+'ستصلك هنا تنبيهات المرصة المهمة، مثل تحديثات المنتجات والأنشطة الجديدة.'+
+'</p>'+
+'<div style="background:#edf6ef;padding:14px;border-radius:14px;margin:18px 0;color:#075b35;font-size:14px">'+
+'سيتم تفعيل نظام الإشعارات عند اكتمال ربطه بالخلفية.'+
+'</div>'+
+'<button onclick="closeModal()">حسناً</button>'+
+'</div>';
+
+$('modal').style.display='block';
+};
 };
 
 window.openMore=function(){
