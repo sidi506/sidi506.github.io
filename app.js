@@ -424,6 +424,7 @@ loadProducts();
 
 let stores = [];
 
+
 function storeCard(s){
 const t=T[lang];
 const cn=t.cities[s.city]||s.city||"";
@@ -431,13 +432,21 @@ const logo=s.logo_url
 ?`<img src="${esc(s.logo_url)}" alt="">`
 :`<div class="store-logo">🏬</div>`;
 
+const featureButton=isAdmin
+?`<button onclick="event.stopPropagation();toggleFeaturedStore('${esc(s.id)}',${!s.is_featured})">
+${s.is_featured?"⭐ إزالة التمييز":"☆ تمييز المتجر"}
+</button>`
+:"";
+
 return `
 <div class="store-card">
 ${logo}
 <h3>${esc(s.store_name)}</h3>
 <p>📍 ${esc(cn)}</p>
+${isAdmin?`<div>${featureButton}</div>`:""}
 </div>`;
 }
+
 
 function renderStores(){
 const box=$("storesList");
