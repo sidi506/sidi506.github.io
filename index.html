@@ -523,6 +523,36 @@ $('modalbody').innerHTML=
 
 $('modal').style.display='block';
 };
+  window.openAppearance=function(){
+closeMore();
+
+var current=localStorage.getItem('mersa-theme')||'light';
+
+$('modalbody').innerHTML=
+'<div style="text-align:center;padding:15px 5px">'+
+'<div style="font-size:42px;margin-bottom:12px">🎨</div>'+
+'<h2 style="color:#075b35;margin:0 0 18px">مظهر التطبيق</h2>'+
+
+'<button onclick="setAppearance(\'light\')" style="margin-bottom:12px;background:'+(current==='light'?'#075b35':'#eaf3ec')+';color:'+(current==='light'?'#fff':'#075b35')+'">☀️ الوضع الفاتح</button>'+
+
+'<button onclick="setAppearance(\'dark\')" style="background:'+(current==='dark'?'#075b35':'#eaf3ec')+';color:'+(current==='dark'?'#fff':'#075b35')+'">🌙 الوضع الداكن</button>'+
+
+'<button class="alt" onclick="closeModal()">إغلاق</button>'+
+'</div>';
+
+$('modal').style.display='block';
+};
+
+window.setAppearance=function(mode){
+localStorage.setItem('mersa-theme',mode);
+document.body.classList.toggle('dark-mode',mode==='dark');
+openAppearance();
+};
+
+document.body.classList.toggle(
+'dark-mode',
+localStorage.getItem('mersa-theme')==='dark'
+);
 };
 
 window.openMore=function(){
