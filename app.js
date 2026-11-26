@@ -221,10 +221,9 @@ window.adminShowStores=async function(){
 if(!isAdmin)return;
 
 $("list").innerHTML=`
-<div onclick="adminShowStores()" style="cursor:pointer;padding:18px;background:#fff3e0;border-radius:12px">
-<h3>🏪 المتاجر</h3>
-<strong>${s.stores_count}</strong>
-<p>اضغط لعرض المتاجر ←</p>
+<div style="padding:20px">
+<h2>🏪 المتاجر المسجلة</h2>
+<p>جارٍ تحميل المتاجر...</p>
 </div>
 `;
 
