@@ -89,6 +89,7 @@ $("productImageCount").textContent=(window.productImageIndex+1)+" / "+images.len
 
 
 
+
 async function openAdmin(){
 if(!isAdmin)return;
 
@@ -109,7 +110,6 @@ return;
 
 const s=r.data[0];
 
-
 $("adminStats").innerHTML=`
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px">
 
@@ -125,20 +125,16 @@ $("adminStats").innerHTML=`
 <p>اضغط لعرض المسجلين ←</p>
 </div>
 
-</div>
-`;
-  
-
 <div onclick="adminShowProducts()" style="cursor:pointer;padding:18px;background:#e3f2fd;border-radius:12px">
 <h3>📦 المنتجات</h3>
 <strong>${s.products_count}</strong>
 <p>اضغط لإدارة المنتجات ←</p>
 </div>
 
-
 </div>
 `;
-}
+  }
+
 
 window.openAdmin=openAdmin;
 
