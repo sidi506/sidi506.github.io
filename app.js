@@ -528,7 +528,7 @@ renderStores();
 
 window.openStore=async function(id){
 
-const s=stores.find(x=>String(x.id)===String(id));
+const s=typeof id==="object"?id:stores.find(x=>String(x.id)===String(id));
 if(!s)return;
 
 const primary=/^#[0-9a-fA-F]{6}$/.test(s.theme_color||"")
