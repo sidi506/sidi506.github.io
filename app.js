@@ -870,6 +870,9 @@ ${s.cover_url?`<img src="${esc(s.cover_url)}" style="width:100%;max-height:130px
 
 <p>${s.is_published?"🟢 المتجر منشور":"⚪ المتجر غير منشور"}</p>
 
+<button type="button" onclick='openStore(${JSON.stringify(s).replace(/'/g,"&#39;")})'>
+👁️ معاينة متجري
+</button>
 <button type="submit">حفظ التعديلات</button>
 <button type="button" onclick="closeModal()">إلغاء</button>
 
