@@ -714,6 +714,25 @@ $("modalbody").innerHTML=`
 
 };
 
+
+window.uploadStoreImage = async function(file,kind){
+
+if(!file)return null;
+
+const blob=await resize(file);
+const path=user.id+"/store-"+kind+"-"+Date.now()+".jpg";
+
+const up=await sb.storage.from("product-images").upload(
+path,blob,
+{contentType:"image/jpeg",upsert:true}
+);
+
+if(up.error)throw up.error;
+
+return sb.storage.from("product-images").getPublicUrl(path).data.publicUrl;
+
+};
+
   
 window.saveMyStore = async function(ev){
 
