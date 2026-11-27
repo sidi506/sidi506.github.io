@@ -466,10 +466,10 @@ if($("modal").style.display==="block")renderModal();
 
 render();
 loadProducts();
+
 // ===== نظام المتاجر =====
 
 let stores = [];
-
 
 function storeCard(s){
 const t=T[lang];
@@ -485,14 +485,13 @@ ${s.is_featured?"⭐ إزالة التمييز":"☆ تمييز المتجر"}
 :"";
 
 return `
-<div class="store-card">
+<div class="store-card" onclick="openStore('${esc(s.id)}')" style="cursor:pointer">
 ${logo}
 <h3>${esc(s.store_name)}</h3>
 <p>📍 ${esc(cn)}</p>
 ${isAdmin?`<div>${featureButton}</div>`:""}
 </div>`;
 }
-
 
 function renderStores(){
 const box=$("storesList");
@@ -512,7 +511,6 @@ box.innerHTML=[...featured,...normal]
 .join("");
 }
 
-
 async function loadStores(){
 const r=await sb.from("seller_stores")
 .select("*")
@@ -523,6 +521,76 @@ const r=await sb.from("seller_stores")
 stores=r.error?[]:r.data;
 renderStores();
 }
+
+window.openStore=async function(id){
+
+const s=stores.find(x=>String(x.id)===String(id));
+if(!s)return;
+
+$("modalbody").innerHTML=`
+<div style="text-align:center;padding:12px">
+<p>جارٍ تحميل المتجر...</p>
+</div>`;
+
+$("modal").style.display="flex";
+
+const r=await sb.from("products")
+.select("*")
+.eq("user_id",s.user_id)
+.order("created_at",{ascending:false})
+.limit(100);
+
+if(r.error){
+$("modalbody").innerHTML=`
+<h2>${esc(s.store_name)}</h2>
+<p>تعذر تحميل منتجات المتجر.</p>
+<button onclick="closeModal()">إغلاق</button>`;
+return;
+}
+
+const items=r.data||[];
+
+if(!Array.isArray(products))products=[];
+
+items.forEach(p=>{
+if(!products.some(x=>String(x.id)===String(p.id))){
+products.push(p);
+}
+});
+
+const cover=s.cover_url
+?`<img src="${esc(s.cover_url)}" style="width:100%;height:160px;object-fit:cover;border-radius:12px">`
+:"";
+
+const logo=s.logo_url
+?`<img src="${esc(s.logo_url)}" style="width:90px;height:90px;object-fit:cover;border-radius:50%;border:4px solid white;margin-top:-45px;background:white">`
+:`<div style="font-size:55px;margin-top:-40px">🏬</div>`;
+
+const phone=String(s.phone||"").replace(/\D/g,"");
+
+$("modalbody").innerHTML=`
+<div style="padding:12px">
+${cover}
+
+<div style="text-align:center">
+${logo}
+<h2>${esc(s.store_name)}</h2>
+<p>${esc(s.description||"")}</p>
+<p>📍 ${esc(T[lang].cities[s.city]||s.city||"")}</p>
+${phone?`<a class="btn" target="_blank" rel="noopener" href="https://wa.me/${phone}">واتساب المتجر</a>`:""}
+</div>
+
+<hr>
+
+<h3>🛍️ منتجات المتجر (${items.length})</h3>
+
+<div class="products-grid">
+${items.length?items.map(card).join(""):'<p class="msg">لا توجد منتجات في هذا المتجر حالياً</p>'}
+</div>
+
+<button onclick="closeModal()" style="margin-top:15px">إغلاق المتجر</button>
+</div>`;
+};
 
 window.showAllStores=function(){
 if(!stores.length)return;
@@ -540,3 +608,4 @@ $("modal").style.display="block";
 
 loadStores();
 // END
+  
