@@ -16,65 +16,33 @@ if(!T[lang])lang="ar";
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 
 
-function card(p){
+
+function card(p,storeTheme){
+
 const t=T[lang];
 const img=p.image_url?`<img src="${esc(p.image_url)}" alt="" loading="lazy">`:"";
 const cn=t.cities[p.city]||"";
 const where=cn+(p.place?(cn?" - ":"")+p.place:"");
 const mine=user&&p.user_id===user.id?`<button class="del" onclick="event.stopPropagation();delProduct('${esc(p.id)}')">${t.del}</button>`:"";
 
-return `<div class="item" onclick="openProduct('${esc(p.id)}')">
+const primary=storeTheme?.primary;
+const accent=storeTheme?.accent;
+
+const style=primary?
+`style="border:1px solid ${accent};background:linear-gradient(180deg,${accent}12,transparent);"`:"";
+
+const titleStyle=primary?`style="color:${primary}"`:"";
+const priceStyle=primary?`style="color:${primary};"`:"";
+
+return `<div class="item" ${style} onclick="openProduct('${esc(p.id)}')">
 ${img}
-<h3>${esc(p.title)}</h3>
-<div class="price">${esc(p.price)} ${t.cur}</div>
+<h3 ${titleStyle}>${esc(p.title)}</h3>
+<div class="price" ${priceStyle}>${esc(p.price)} ${t.cur}</div>
 <div class="place">📍 ${esc(where)}</div>
 ${mine}
 </div>`;
 }
 
-
-window.openProduct=function(id){
-const p=products.find(x=>String(x.id)===String(id));
-if(!p)return;
-
-const t=T[lang];
-const cn=t.cities[p.city]||"";
-const where=cn+(p.place?(cn?" - ":"")+p.place:"");
-const cityEn=T.en.cities[p.city]||"";
-const mapUrl="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent((p.place?p.place+" ":"")+cityEn+" Mauritania");
-const phone=String(p.phone||"").replace(/\D/g,"");
-
-const images=Array.isArray(p.image_urls)&&p.image_urls.length
-?p.image_urls.filter(Boolean)
-:(p.image_url?[p.image_url]:[]);
-
-window.productImages=images;
-window.productImageIndex=0;
-
-const gallery=images.length?`
-<div style="text-align:center">
-<img id="productMainImage" src="${esc(images[0])}" alt="${esc(p.title)}" style="width:100%;max-height:300px;object-fit:contain;border-radius:12px">
-${images.length>1?`
-<div style="display:flex;justify-content:center;align-items:center;gap:20px;margin:12px">
-<button onclick="showProductImage(-1)">❮</button>
-<span id="productImageCount">1 / ${images.length}</span>
-<button onclick="showProductImage(1)">❯</button>
-</div>`:""}
-</div>`:"";
-
-$("modalbody").innerHTML=`
-<div class="product-details">
-${gallery}
-<h2>${esc(p.title)}</h2>
-<p>${esc(p.description||"")}</p>
-<div class="price">${esc(p.price)} ${t.cur}</div>
-<div class="place">📍 ${esc(where)}</div>
-${phone?`<a class="btn" target="_blank" rel="noopener" href="https://wa.me/${phone}">${t.contact}</a>`:""}
-<a class="btn map" target="_blank" rel="noopener" href="${mapUrl}">${t.map}</a>
-</div>`;
-
-$("modal").style.display="flex";
-};
 
 window.showProductImage=function(direction){
 const images=window.productImages;
