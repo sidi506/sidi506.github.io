@@ -830,6 +830,16 @@ $("modalbody").innerHTML=`
 </select>
 
 <hr>
+<h3>🎨 ألوان وهوية المتجر</h3>
+
+<label>اللون الأساسي</label>
+<input name="theme_color" type="color" value="${esc(s.theme_color||"#0a7d3b")}">
+
+<label>اللون الثانوي</label>
+<input name="accent_color" type="color" value="${esc(s.accent_color||"#d6ad4b")}">
+
+
+<hr>
 <h3>🎨 هوية المتجر</h3>
 
 <label>الشعار الحالي</label>
@@ -908,6 +918,8 @@ slug:slug,
 description:g("description"),
 phone:g("phone"),
 city:g("city"),
+  theme_color:g("theme_color"),
+accent_color:g("accent_color"),
 logo_url:logo,
 cover_url:cover,
 updated_at:new Date().toISOString()
