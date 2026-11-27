@@ -857,6 +857,7 @@ ${s.cover_url?`<img src="${esc(s.cover_url)}" style="width:100%;max-height:130px
 };
 
 
+
 window.updateMyStore = async function(ev,id){
 
 ev.preventDefault();
@@ -874,7 +875,31 @@ const slug=rawSlug
 
 const btn=f.querySelector('button[type="submit"]');
 btn.disabled=true;
-btn.textContent="جارٍ حفظ التعديلات...";
+btn.textContent="جارٍ رفع الصور وحفظ التعديلات...";
+
+try{
+
+const old=await sb.from("seller_stores")
+.select("logo_url,cover_url")
+.eq("id",id)
+.eq("user_id",user.id)
+.single();
+
+if(old.error)throw old.error;
+
+let logo=old.data.logo_url;
+let cover=old.data.cover_url;
+
+const logoFile=f.elements["store_logo"].files[0];
+const coverFile=f.elements["store_cover"].files[0];
+
+if(logoFile){
+logo=await uploadStoreImage(logoFile,"logo");
+}
+
+if(coverFile){
+cover=await uploadStoreImage(coverFile,"cover");
+}
 
 const r=await sb.from("seller_stores")
 .update({
@@ -883,33 +908,37 @@ slug:slug,
 description:g("description"),
 phone:g("phone"),
 city:g("city"),
+logo_url:logo,
+cover_url:cover,
 updated_at:new Date().toISOString()
 })
 .eq("id",id)
 .eq("user_id",user.id)
 .select();
 
-if(r.error){
-$("storeNote").textContent="تعذر حفظ التعديلات: "+r.error.message;
-btn.disabled=false;
-btn.textContent="حفظ التعديلات";
-return;
-}
+if(r.error)throw r.error;
 
 if(!r.data||!r.data.length){
-$("storeNote").textContent="لم يتم تحديث المتجر. تحقق من الصلاحيات.";
-btn.disabled=false;
-btn.textContent="حفظ التعديلات";
-return;
+throw new Error("لم يتم تحديث المتجر. تحقق من الصلاحيات.");
 }
 
 $("modalbody").innerHTML=`
 <div style="padding:20px;text-align:center">
 <h2>✅ تم تحديث متجرك</h2>
+<p>تم حفظ البيانات والصور بنجاح.</p>
 <button onclick="closeModal()">حسناً</button>
 </div>`;
 
+}catch(e){
+
+$("storeNote").textContent="تعذر حفظ التعديلات: "+e.message;
+btn.disabled=false;
+btn.textContent="حفظ التعديلات";
+
+}
+
 };
+  
 
 
 
