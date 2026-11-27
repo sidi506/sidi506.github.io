@@ -634,6 +634,220 @@ await loadStores();
 alert(featured?"تم تمييز المتجر بنجاح ⭐":"تم إلغاء تمييز المتجر");
 };
 
+window.openMyStore = async function(){
+
+if(!user){
+alert("يجب تسجيل الدخول أولاً");
+return;
+}
+
+$("modalbody").innerHTML=`
+<div style="padding:15px;text-align:center">
+<p>جارٍ تحميل بيانات متجرك...</p>
+</div>`;
+
+$("modal").style.display="flex";
+
+const r=await sb.from("seller_stores")
+.select("*")
+.eq("user_id",user.id)
+.maybeSingle();
+
+if(r.error){
+$("modalbody").innerHTML=`
+<p>تعذر تحميل المتجر: ${esc(r.error.message)}</p>
+<button onclick="closeModal()">إغلاق</button>`;
+return;
+}
+
+if(r.data){
+window.editMyStore(r.data);
+}else{
+window.showCreateStore();
+}
+
+};
+
+window.showCreateStore = function(){
+
+$("modalbody").innerHTML=`
+<div style="padding:15px">
+<h2>🏪 إنشاء متجري</h2>
+
+<form onsubmit="saveMyStore(event)">
+
+<label>اسم المتجر</label>
+<input name="store_name" maxlength="80" required placeholder="مثلاً: متجر آبو">
+
+<label>رابط المتجر المختصر</label>
+<input name="slug" maxlength="50" placeholder="abou-store">
+
+<label>وصف المتجر</label>
+<textarea name="description" maxlength="500" placeholder="عرّف الزبائن بمتجرك"></textarea>
+
+<label>رقم واتساب</label>
+<input name="phone" type="tel" placeholder="222XXXXXXXX">
+
+<label>المدينة</label>
+<select name="city" required>
+<option value="nkc">نواكشوط</option>
+<option value="ndb">نواذيبو</option>
+</select>
+
+<button type="submit">إنشاء المتجر</button>
+<button type="button" onclick="closeModal()">إلغاء</button>
+
+</form>
+<div id="storeNote" class="note"></div>
+</div>
+`;
+
+};
+  
+window.saveMyStore = async function(ev){
+
+ev.preventDefault();
+
+if(!user){
+alert("يجب تسجيل الدخول أولاً");
+return;
+}
+
+const f=ev.target;
+const g=n=>f.elements[n].value.trim();
+
+const name=g("store_name");
+const rawSlug=g("slug");
+
+const slug=rawSlug
+.toLowerCase()
+.replace(/[^a-z0-9-]+/g,"-")
+.replace(/^-|-$/g,"") || "store-"+user.id.slice(0,8);
+
+const btn=f.querySelector('button[type="submit"]');
+btn.disabled=true;
+btn.textContent="جارٍ إنشاء المتجر...";
+
+const r=await sb.from("seller_stores").insert({
+user_id:user.id,
+store_name:name,
+slug:slug,
+description:g("description"),
+phone:g("phone"),
+city:g("city"),
+is_published:false,
+is_featured:false
+});
+
+if(r.error){
+$("storeNote").textContent="تعذر إنشاء المتجر: "+r.error.message;
+btn.disabled=false;
+btn.textContent="إنشاء المتجر";
+return;
+}
+
+$("modalbody").innerHTML=`
+<div style="padding:20px;text-align:center">
+<h2>🎉 تم إنشاء متجرك!</h2>
+<p>أصبح متجرك مسجلاً، وينتظر النشر ليظهر للزوار.</p>
+<button onclick="closeModal()">حسناً</button>
+</div>`;
+
+};
+  
+window.editMyStore = function(s){
+
+$("modalbody").innerHTML=`
+<div style="padding:15px">
+<h2>🏪 تعديل متجري</h2>
+
+<form onsubmit="updateMyStore(event,'${esc(s.id)}')">
+
+<label>اسم المتجر</label>
+<input name="store_name" maxlength="80" required value="${esc(s.store_name)}">
+
+<label>رابط المتجر المختصر</label>
+<input name="slug" maxlength="50" value="${esc(s.slug||"")}">
+
+<label>وصف المتجر</label>
+<textarea name="description" maxlength="500">${esc(s.description||"")}</textarea>
+
+<label>رقم واتساب</label>
+<input name="phone" type="tel" value="${esc(s.phone||"")}">
+
+<label>المدينة</label>
+<select name="city">
+<option value="nkc" ${s.city==="nkc"?"selected":""}>نواكشوط</option>
+<option value="ndb" ${s.city==="ndb"?"selected":""}>نواذيبو</option>
+</select>
+
+<p>${s.is_published?"🟢 المتجر منشور":"⚪ المتجر غير منشور"}</p>
+
+<button type="submit">حفظ التعديلات</button>
+<button type="button" onclick="closeModal()">إلغاء</button>
+
+</form>
+<div id="storeNote" class="note"></div>
+</div>
+`;
+
+};
+
+window.updateMyStore = async function(ev,id){
+
+ev.preventDefault();
+
+if(!user)return;
+
+const f=ev.target;
+const g=n=>f.elements[n].value.trim();
+
+const rawSlug=g("slug");
+const slug=rawSlug
+.toLowerCase()
+.replace(/[^a-z0-9-]+/g,"-")
+.replace(/^-|-$/g,"") || "store-"+user.id.slice(0,8);
+
+const btn=f.querySelector('button[type="submit"]');
+btn.disabled=true;
+btn.textContent="جارٍ حفظ التعديلات...";
+
+const r=await sb.from("seller_stores")
+.update({
+store_name:g("store_name"),
+slug:slug,
+description:g("description"),
+phone:g("phone"),
+city:g("city"),
+updated_at:new Date().toISOString()
+})
+.eq("id",id)
+.eq("user_id",user.id)
+.select();
+
+if(r.error){
+$("storeNote").textContent="تعذر حفظ التعديلات: "+r.error.message;
+btn.disabled=false;
+btn.textContent="حفظ التعديلات";
+return;
+}
+
+if(!r.data||!r.data.length){
+$("storeNote").textContent="لم يتم تحديث المتجر. تحقق من الصلاحيات.";
+btn.disabled=false;
+btn.textContent="حفظ التعديلات";
+return;
+}
+
+$("modalbody").innerHTML=`
+<div style="padding:20px;text-align:center">
+<h2>✅ تم تحديث متجرك</h2>
+<button onclick="closeModal()">حسناً</button>
+</div>`;
+
+};
+
+
 
 // ===== نهاية نظام المتاجر =====
 
