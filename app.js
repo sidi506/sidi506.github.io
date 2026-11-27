@@ -734,6 +734,7 @@ return sb.storage.from("product-images").getPublicUrl(path).data.publicUrl;
 };
 
   
+
 window.saveMyStore = async function(ev){
 
 ev.preventDefault();
@@ -756,7 +757,17 @@ const slug=rawSlug
 
 const btn=f.querySelector('button[type="submit"]');
 btn.disabled=true;
-btn.textContent="جارٍ إنشاء المتجر...";
+btn.textContent="جارٍ رفع الصور وإنشاء المتجر...";
+
+try{
+
+const logo=await uploadStoreImage(
+f.elements["store_logo"].files[0],"logo"
+);
+
+const cover=await uploadStoreImage(
+f.elements["store_cover"].files[0],"cover"
+);
 
 const r=await sb.from("seller_stores").insert({
 user_id:user.id,
@@ -765,26 +776,33 @@ slug:slug,
 description:g("description"),
 phone:g("phone"),
 city:g("city"),
+logo_url:logo,
+cover_url:cover,
 is_published:false,
 is_featured:false
 });
 
-if(r.error){
-$("storeNote").textContent="تعذر إنشاء المتجر: "+r.error.message;
-btn.disabled=false;
-btn.textContent="إنشاء المتجر";
-return;
-}
+if(r.error)throw r.error;
 
 $("modalbody").innerHTML=`
 <div style="padding:20px;text-align:center">
 <h2>🎉 تم إنشاء متجرك!</h2>
-<p>أصبح متجرك مسجلاً، وينتظر النشر ليظهر للزوار.</p>
+<p>تم حفظ بيانات المتجر وصوره، وينتظر النشر ليظهر للزوار.</p>
 <button onclick="closeModal()">حسناً</button>
 </div>`;
 
+}catch(e){
+
+$("storeNote").textContent="تعذر إنشاء المتجر: "+e.message;
+btn.disabled=false;
+btn.textContent="إنشاء المتجر";
+
+}
+
 };
+
   
+
 window.editMyStore = function(s){
 
 $("modalbody").innerHTML=`
@@ -811,6 +829,21 @@ $("modalbody").innerHTML=`
 <option value="ndb" ${s.city==="ndb"?"selected":""}>نواذيبو</option>
 </select>
 
+<hr>
+<h3>🎨 هوية المتجر</h3>
+
+<label>الشعار الحالي</label>
+${s.logo_url?`<img src="${esc(s.logo_url)}" style="width:90px;height:90px;object-fit:cover;border-radius:12px">`:"<p>لا يوجد شعار حالياً</p>"}
+
+<label>تغيير الشعار</label>
+<input name="store_logo" type="file" accept="image/*">
+
+<label>صورة الغلاف الحالية</label>
+${s.cover_url?`<img src="${esc(s.cover_url)}" style="width:100%;max-height:130px;object-fit:cover;border-radius:12px">`:"<p>لا توجد صورة غلاف حالياً</p>"}
+
+<label>تغيير صورة الغلاف</label>
+<input name="store_cover" type="file" accept="image/*">
+
 <p>${s.is_published?"🟢 المتجر منشور":"⚪ المتجر غير منشور"}</p>
 
 <button type="submit">حفظ التعديلات</button>
@@ -822,6 +855,7 @@ $("modalbody").innerHTML=`
 `;
 
 };
+
 
 window.updateMyStore = async function(ev,id){
 
