@@ -604,6 +604,34 @@ ${stores.map(storeCard).join("")}
 $("modal").style.display="block";
 };
 
+window.toggleFeaturedStore=async function(id,featured){
+
+if(!isAdmin){
+alert("ليس لديك صلاحية تنفيذ هذا الإجراء");
+return;
+}
+
+const r=await sb.from("seller_stores")
+.update({is_featured:featured})
+.eq("id",id)
+.select();
+
+if(r.error){
+alert("تعذر تحديث المتجر: "+r.error.message);
+return;
+}
+
+if(!r.data||!r.data.length){
+alert("لم يتم تحديث المتجر");
+return;
+}
+
+await loadStores();
+
+alert(featured?"تم تمييز المتجر بنجاح ⭐":"تم إلغاء تمييز المتجر");
+};
+
+
 // ===== نهاية نظام المتاجر =====
 
 loadStores();
