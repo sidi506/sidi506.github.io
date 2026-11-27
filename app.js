@@ -568,7 +568,7 @@ ${phone?`<a class="btn" target="_blank" rel="noopener" href="https://wa.me/${pho
 <h3 style="color:${primary}">🛍️ منتجات المتجر (${items.length})</h3>
 
 <div class="products-grid">
-${items.length?items.map(card).join(""):'<p class="msg">لا توجد منتجات في هذا المتجر حالياً</p>'}
+${items.length?items.map(p=>card(p,{primary,accent})).join(""):'<p class="msg">لا توجد منتجات في هذا المتجر حالياً</p>'}
 </div>
 
 <button onclick="closeModal()" style="margin-top:15px;background:${primary}">إغلاق المتجر</button>
