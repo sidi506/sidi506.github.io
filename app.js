@@ -525,10 +525,17 @@ stores=r.error?[]:r.data;
 renderStores();
 }
 
+
 window.openStore=async function(id){
 
 const s=stores.find(x=>String(x.id)===String(id));
 if(!s)return;
+
+const primary=/^#[0-9a-fA-F]{6}$/.test(s.theme_color||"")
+?s.theme_color:"#0a7d3b";
+
+const accent=/^#[0-9a-fA-F]{6}$/.test(s.accent_color||"")
+?s.accent_color:"#d6ad4b";
 
 $("modalbody").innerHTML=`
 <div style="text-align:center;padding:12px">
@@ -566,34 +573,41 @@ const cover=s.cover_url
 :"";
 
 const logo=s.logo_url
-?`<img src="${esc(s.logo_url)}" style="width:90px;height:90px;object-fit:cover;border-radius:50%;border:4px solid white;margin-top:-45px;background:white">`
+?`<img src="${esc(s.logo_url)}" style="width:90px;height:90px;object-fit:cover;border-radius:50%;border:4px solid ${accent};margin-top:-45px;background:white">`
 :`<div style="font-size:55px;margin-top:-40px">🏬</div>`;
 
 const phone=String(s.phone||"").replace(/\D/g,"");
 
 $("modalbody").innerHTML=`
-<div style="padding:12px">
+<div style="padding:12px;--store-primary:${primary};--store-accent:${accent}">
+
 ${cover}
 
 <div style="text-align:center">
 ${logo}
-<h2>${esc(s.store_name)}</h2>
+
+<h2 style="color:${primary}">${esc(s.store_name)}</h2>
+
 <p>${esc(s.description||"")}</p>
+
 <p>📍 ${esc(T[lang].cities[s.city]||s.city||"")}</p>
-${phone?`<a class="btn" target="_blank" rel="noopener" href="https://wa.me/${phone}">واتساب المتجر</a>`:""}
+
+${phone?`<a class="btn" target="_blank" rel="noopener" href="https://wa.me/${phone}" style="background:${primary}">واتساب المتجر</a>`:""}
 </div>
 
-<hr>
+<hr style="border:0;border-top:2px solid ${accent};margin:18px 0">
 
-<h3>🛍️ منتجات المتجر (${items.length})</h3>
+<h3 style="color:${primary}">🛍️ منتجات المتجر (${items.length})</h3>
 
 <div class="products-grid">
 ${items.length?items.map(card).join(""):'<p class="msg">لا توجد منتجات في هذا المتجر حالياً</p>'}
 </div>
 
-<button onclick="closeModal()" style="margin-top:15px">إغلاق المتجر</button>
+<button onclick="closeModal()" style="margin-top:15px;background:${primary}">إغلاق المتجر</button>
+
 </div>`;
 };
+
 
 window.showAllStores=function(){
 if(!stores.length)return;
