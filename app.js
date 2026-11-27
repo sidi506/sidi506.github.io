@@ -668,6 +668,7 @@ window.showCreateStore();
 
 };
 
+
 window.showCreateStore = function(){
 
 $("modalbody").innerHTML=`
@@ -694,6 +695,15 @@ $("modalbody").innerHTML=`
 <option value="ndb">نواذيبو</option>
 </select>
 
+<hr>
+<h3>🎨 هوية المتجر</h3>
+
+<label>شعار المتجر</label>
+<input name="store_logo" type="file" accept="image/*">
+
+<label>صورة غلاف المتجر</label>
+<input name="store_cover" type="file" accept="image/*">
+
 <button type="submit">إنشاء المتجر</button>
 <button type="button" onclick="closeModal()">إلغاء</button>
 
@@ -703,6 +713,7 @@ $("modalbody").innerHTML=`
 `;
 
 };
+
   
 window.saveMyStore = async function(ev){
 
