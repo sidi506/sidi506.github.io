@@ -72,6 +72,7 @@ const storeResult=await sb.from("seller_stores")
 .select("id")
 .eq("user_id",p.user_id)
 .eq("is_published",true)
+  .eq("is_suspended",false)
 .maybeSingle();
 
 const storeButton=storeResult.data?
