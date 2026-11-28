@@ -312,6 +312,37 @@ ${s.is_suspended?"🟢 إعادة نشر المتجر":"⛔ إيقاف المت�
 `;
 };
 
+window.adminToggleStore=async function(id,suspend){
+
+if(!isAdmin)return;
+
+const message=suspend
+?"هل تريد إيقاف هذا المتجر؟"
+:"هل تريد إعادة نشر هذا المتجر؟";
+
+if(!confirm(message))return;
+
+const r=await sb.from("seller_stores")
+.update({is_suspended:suspend})
+.eq("id",id)
+.select();
+
+if(r.error){
+alert("تعذر تحديث المتجر: "+r.error.message);
+return;
+}
+
+if(!r.data||!r.data.length){
+alert("لم يتم تحديث المتجر. تحقق من صلاحيات المدير.");
+return;
+}
+
+await loadStores();
+await adminShowStores();
+
+};
+
+
 window.adminDeleteProduct=async function(id){
 if(!isAdmin)return;
 if(!confirm("هل تريد حذف هذا المنتج نهائياً؟"))return;
