@@ -663,45 +663,100 @@ products.push(p);
 }
 });
 
+
 const cover=s.cover_url
-?`<img src="${esc(s.cover_url)}" style="width:100%;height:160px;object-fit:cover;border-radius:12px">`
-:"";
+?`<img src="${esc(s.cover_url)}" style="width:100%;height:190px;object-fit:cover;display:block">`
+:`<div style="height:190px;background:linear-gradient(135deg,${primary},${accent});display:flex;align-items:center;justify-content:center;color:white;font-size:55px">🏬</div>`;
 
 const logo=s.logo_url
-?`<img src="${esc(s.logo_url)}" style="width:90px;height:90px;object-fit:cover;border-radius:50%;border:4px solid ${accent};margin-top:-45px;background:white">`
-:`<div style="font-size:55px;margin-top:-40px">🏬</div>`;
+?`<img src="${esc(s.logo_url)}" style="width:104px;height:104px;object-fit:cover;border-radius:24px;border:5px solid white;background:white;box-shadow:0 5px 20px #0002">`
+:`<div style="width:104px;height:104px;border-radius:24px;border:5px solid white;background:${primary};display:flex;align-items:center;justify-content:center;font-size:48px;box-shadow:0 5px 20px #0002">🏬</div>`;
 
 const phone=String(s.phone||"").replace(/\D/g,"");
 
 $("modalbody").innerHTML=`
-<div style="padding:12px;--store-primary:${primary};--store-accent:${accent}">
+<div style="background:#f7f8f7;overflow:hidden;border-radius:16px">
 
+<div style="position:relative;background:white">
+
+<div style="height:190px;overflow:hidden">
 ${cover}
-
-<div style="text-align:center">
-${logo}
-
-<h2 style="color:${primary}">${esc(s.store_name)}</h2>
-
-<p>${esc(s.description||"")}</p>
-
-<p>📍 ${esc(T[lang].cities[s.city]||s.city||"")}</p>
-
-${phone?`<a class="btn" target="_blank" rel="noopener" href="https://wa.me/${phone}" style="background:${primary}">واتساب المتجر</a>`:""}
 </div>
 
-<hr style="border:0;border-top:2px solid ${accent};margin:18px 0">
+<div style="padding:0 18px 20px">
 
-<h3 style="color:${primary}">🛍️ منتجات المتجر (${items.length})</h3>
+<div style="margin-top:-52px;position:relative;width:fit-content">
+${logo}
+</div>
+
+<div style="margin-top:12px">
+
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+
+<h2 style="margin:0;color:${primary};font-size:24px;font-weight:800">
+${esc(s.store_name)}
+</h2>
+
+<span style="background:${accent}22;color:${primary};padding:6px 12px;border-radius:20px;font-size:12px;font-weight:bold">
+متجر على المرصة
+</span>
+
+</div>
+
+<p style="color:#626b64;line-height:1.8;margin:10px 0">
+${esc(s.description||"مرحباً بكم في متجرنا")}
+</p>
+
+${s.city?`
+<div style="display:inline-flex;align-items:center;gap:6px;background:#edf3ee;color:${primary};padding:8px 12px;border-radius:10px;font-size:13px">
+📍 ${esc(T[lang].cities[s.city]||s.city)}
+</div>`:""}
+
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+
+${phone?`
+<a href="https://wa.me/${phone}" target="_blank" rel="noopener"
+style="flex:1;min-width:130px;text-align:center;text-decoration:none;background:${primary};color:white;padding:13px;border-radius:12px;font-weight:bold">
+واتساب المتجر
+</a>`:""}
+
+<button onclick="closeModal()"
+style="flex:1;min-width:100px;background:white;color:${primary};border:1px solid ${primary};padding:13px;border-radius:12px">
+إغلاق
+</button>
+
+</div>
+</div>
+</div>
+</div>
+
+<div style="padding:20px 14px">
+
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:16px">
+
+<div>
+<h3 style="margin:0;color:#202820;font-size:19px">
+منتجات المتجر
+</h3>
+<p style="margin:5px 0 0;color:#7a817b;font-size:12px">
+اكتشف ما يقدمه هذا المتجر
+</p>
+</div>
+
+<span style="background:${primary};color:white;padding:7px 12px;border-radius:20px;font-size:12px">
+${items.length} منتج
+</span>
+
+</div>
 
 <div class="products-grid">
-${items.length?items.map(p=>card(p,{primary,accent})).join(""):'<p class="msg">لا توجد منتجات في هذا المتجر حالياً</p>'}
+${items.length?items.map(p=>card(p,{primary,accent})).join(""):'<div style="grid-column:1/-1;text-align:center;background:white;padding:35px 15px;border-radius:15px;color:#777"><div style="font-size:40px">🛍️</div><p>لا توجد منتجات في هذا المتجر حالياً</p></div>'}
 </div>
 
-<button onclick="closeModal()" style="margin-top:15px;background:${primary}">إغلاق المتجر</button>
-
+</div>
 </div>`;
 };
+
 
 
 window.showAllStores=function(){
