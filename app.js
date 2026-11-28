@@ -716,11 +716,29 @@ ${stores.map(storeCard).join("")}
 $("modal").style.display="block";
 };
 
+
 window.toggleFeaturedStore=async function(id,featured){
 
 if(!isAdmin){
 alert("ليس لديك صلاحية تنفيذ هذا الإجراء");
 return;
+}
+
+if(featured){
+const check=await sb.from("seller_stores")
+.select("is_suspended")
+.eq("id",id)
+.maybeSingle();
+
+if(check.error||!check.data){
+alert("تعذر التحقق من حالة المتجر");
+return;
+}
+
+if(check.data.is_suspended){
+alert("لا يمكن تمييز متجر موقوف إدارياً");
+return;
+}
 }
 
 const r=await sb.from("seller_stores")
@@ -742,6 +760,7 @@ await loadStores();
 
 alert(featured?"تم تمييز المتجر بنجاح ⭐":"تم إلغاء تمييز المتجر");
 };
+
 
 window.openMyStore = async function(){
 
