@@ -851,6 +851,118 @@ window.showCreateStore();
 
 };
 
+window.openSellerDashboard = async function(){
+
+if(!user){
+alert("يجب تسجيل الدخول أولاً");
+return;
+}
+
+$("modalbody").innerHTML=`
+<div style="padding:25px;text-align:center">
+<p>جارٍ تحميل لوحة متجرك...</p>
+</div>`;
+
+$("modal").style.display="flex";
+
+const sr=await sb.from("seller_stores")
+.select("*")
+.eq("user_id",user.id)
+.maybeSingle();
+
+if(sr.error){
+$("modalbody").innerHTML=`
+<p>تعذر تحميل بيانات المتجر: ${esc(sr.error.message)}</p>`;
+return;
+}
+
+if(!sr.data){
+window.showCreateStore();
+return;
+}
+
+const s=sr.data;
+
+const r=await sb.from("products")
+.select("*")
+.eq("user_id",user.id)
+.order("created_at",{ascending:false})
+.limit(100);
+
+if(r.error){
+$("modalbody").innerHTML=`
+<p>تعذر تحميل منتجاتك: ${esc(r.error.message)}</p>`;
+return;
+}
+
+const mine=r.data||[];
+
+if(!Array.isArray(products))products=[];
+
+mine.forEach(p=>{
+if(!products.some(x=>String(x.id)===String(p.id))){
+products.push(p);
+}
+});
+
+const primary=/^#[0-9a-fA-F]{6}$/.test(s.theme_color||"")
+?s.theme_color:"#0a7d3b";
+
+$("modalbody").innerHTML=`
+<div style="padding:16px;background:#f7f8f7;border-radius:16px">
+
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+
+${s.logo_url?
+`<img src="${esc(s.logo_url)}" style="width:65px;height:65px;object-fit:cover;border-radius:15px">`
+:
+`<div style="width:65px;height:65px;border-radius:15px;background:${primary};display:grid;place-items:center;font-size:30px">🏪</div>`}
+
+<div style="flex:1">
+<h2 style="margin:0;color:${primary}">${esc(s.store_name)}</h2>
+<p style="margin:5px 0;color:#777;font-size:13px">لوحة إدارة متجرك</p>
+</div>
+</div>
+
+<div style="background:white;padding:15px;border-radius:13px;margin-bottom:15px">
+<strong>📦 منتجات متجرك</strong>
+<div style="font-size:28px;font-weight:bold;color:${primary};margin-top:8px">
+${mine.length}
+</div>
+</div>
+
+<button onclick="openMyStore()"
+style="width:100%;padding:13px;background:white;color:${primary};border:1px solid ${primary};border-radius:11px;margin-bottom:10px;font-weight:bold">
+⚙️ تعديل بيانات المتجر
+</button>
+
+<button onclick="openModal()"
+style="width:100%;padding:13px;background:${primary};color:white;border:0;border-radius:11px;margin-bottom:20px;font-weight:bold">
+＋ إضافة منتج جديد
+</button>
+
+<h3 style="margin:0 0 14px">منتجاتي</h3>
+
+<div class="products-grid">
+${mine.length?
+mine.map(p=>card(p)).join("")
+:
+`<div style="grid-column:1/-1;text-align:center;background:white;padding:25px;border-radius:12px;color:#777">
+🛍️
+<p>لم تضف أي منتجات بعد.</p>
+</div>`}
+</div>
+
+<button onclick="closeModal()"
+style="width:100%;padding:12px;background:#eee;border:0;border-radius:10px;margin-top:18px">
+إغلاق لوحة البائع
+</button>
+
+</div>`;
+
+};
+
+
 
 window.showCreateStore = function(){
 
