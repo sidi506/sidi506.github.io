@@ -299,7 +299,12 @@ ${items.length?items.map(s=>`
 ${s.logo_url?`<img src="${esc(s.logo_url)}" style="width:75px;height:75px;object-fit:cover;border-radius:10px">`:""}
 <h3>${esc(s.store_name)}</h3>
 <p>📍 ${esc(T.ar.cities[s.city]||s.city||"")}</p>
-<p>${s.is_published?"🟢 منشور":"⚪ غير منشور"}</p>
+<p>${s.is_suspended?"⛔ موقوف إدارياً":s.is_published?"🟢 منشور":"⚪ غير منشور"}</p>
+
+<button onclick="adminToggleStore('${esc(s.id)}',${!s.is_suspended})"
+style="background:${s.is_suspended?'#16803c':'#b71c1c'};color:white;margin-top:8px">
+${s.is_suspended?"🟢 إعادة نشر المتجر":"⛔ إيقاف المتجر"}
+</button>
 <p>${s.is_featured?"⭐ متجر مميز":"متجر عادي"}</p>
 </div>
 `).join(""):'<p>لا توجد متاجر مسجلة</p>'}
