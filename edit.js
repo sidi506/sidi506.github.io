@@ -93,6 +93,7 @@ $("modalbody").innerHTML=
 '<input name="pphone" type="tel" placeholder="'+t.pphone+'" value="'+esc(p.phone)+'" required>'+
 
 '<hr><h3>📷 صور المنتج</h3>'+
+  '<div id="editImagesPreview">'+imageHTML()+'</div>'+
 
 '<div id="editImagesPreview">'+imageHTML()+'</div>'+
 
