@@ -118,32 +118,77 @@ $("editImagesPreview").innerHTML=imageHTML();
 }
   
 
+
 window.saveEdit=async function(ev){
+
 ev.preventDefault();
+
 var t=T[lang],e=tx(),f=ev.target;
-function g(n){return f.elements[n].value;}
+
+function g(n){
+return f.elements[n].value;
+}
+
 var phone=g("pphone").replace(/\D/g,"");
-if(phone.length<8){$("note").textContent=t.errPhone;return;}
-var p=(products||[]).find(function(x){return x.id===editingId;});
+
+if(phone.length<8){
+$("note").textContent=t.errPhone;
+return;
+}
+
+var p=(products||[]).find(function(x){
+return x.id===editingId;
+});
+
 if(!p)return;
+
+var oldImages=Array.isArray(p.image_urls)&&p.image_urls.length
+?p.image_urls.filter(Boolean)
+:(p.image_url?[p.image_url]:[]);
+
+var keepImages=(window.editProductImages||[]).filter(Boolean);
+
+var files=Array.from(f.elements["pimages"].files||[]);
+
+if(keepImages.length+files.length>5){
+$("note").textContent="الحد الأقصى 5 صور. احذف بعض الصور أولاً.";
+return;
+}
+
 var btn=f.querySelector("button[type=submit]");
-btn.disabled=true;btn.textContent=e.saving;
-var newPath=null;
+
+btn.disabled=true;
+btn.textContent=e.saving;
+
+var newPaths=[];
+var saved=false;
+
 try{
-var image_url=p.image_url,oldPath=null;
-var file=f.elements["pimage"].files[0];
-if(file){
-var blob=await resize(file);
-newPath=user.id+"/"+Date.now()+".jpg";
-var up=await sb.storage.from("product-images").upload(newPath,blob,{contentType:"image/jpeg"});
+
+var finalImages=keepImages.slice();
+
+for(var i=0;i<files.length;i++){
+
+var blob=await resize(files[i]);
+
+var path=user.id+"/"+Date.now()+"-"+i+".jpg";
+
+var up=await sb.storage.from("product-images").upload(
+path,blob,{contentType:"image/jpeg"}
+);
+
 if(up.error)throw up.error;
-image_url=sb.storage.from("product-images").getPublicUrl(newPath).data.publicUrl;
-if(p.image_url){
-var i=p.image_url.indexOf("/product-images/");
-if(i>=0)oldPath=decodeURIComponent(p.image_url.slice(i+16));
+
+newPaths.push(path);
+
+var url=sb.storage.from("product-images").getPublicUrl(path).data.publicUrl;
+
+finalImages.push(url);
+
 }
-}
+
 var r=await sb.from("products").update({
+
 title:g("ptitle").trim(),
 description:g("pdesc").trim(),
 price:Number(g("pprice")),
@@ -151,20 +196,69 @@ category:g("pcat"),
 city:g("pcity"),
 place:g("pplace").trim(),
 phone:phone,
-image_url:image_url
+image_url:finalImages[0]||null,
+image_urls:finalImages
+
 }).eq("id",editingId).select();
+
 if(r.error)throw r.error;
+
 if(!r.data||!r.data.length)throw new Error(e.noperm);
-if(oldPath){try{await sb.storage.from("product-images").remove([oldPath]);}catch(x){}}
-editingId=null;
-closeModal();
-await loadProducts();
-}catch(err){
-if(newPath){try{await sb.storage.from("product-images").remove([newPath]);}catch(x){}}
-$("note").textContent=t.errNet+" ("+(err.message||"")+")";
-btn.disabled=false;btn.textContent=e.save;
+
+saved=true;
+
+function storagePath(url){
+
+var marker="/product-images/";
+var i=url.indexOf(marker);
+
+if(i<0)return null;
+
+try{
+return decodeURIComponent(url.slice(i+marker.length).split("?")[0]);
+}catch(x){
+return url.slice(i+marker.length).split("?")[0];
 }
+
+}
+
+var removed=oldImages.filter(function(url){
+return !finalImages.includes(url);
+});
+
+var paths=removed.map(storagePath).filter(Boolean);
+
+if(paths.length){
+try{
+await sb.storage.from("product-images").remove(paths);
+}catch(x){}
+}
+
+window.editProductImages=finalImages.slice();
+
+editingId=null;
+
+closeModal();
+
+await loadProducts();
+
+}catch(err){
+
+if(!saved&&newPaths.length){
+try{
+await sb.storage.from("product-images").remove(newPaths);
+}catch(x){}
+}
+
+$("note").textContent=t.errNet+" ("+(err.message||"")+")";
+
+btn.disabled=false;
+btn.textContent=e.save;
+
+}
+
 };
+  
 
 if(typeof render==="function"&&products)render();
 })();
