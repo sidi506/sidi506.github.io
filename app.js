@@ -558,16 +558,19 @@ box.innerHTML=[...featured,...normal]
 .join("");
 }
 
+
 async function loadStores(){
 const r=await sb.from("seller_stores")
 .select("*")
 .eq("is_published",true)
+.eq("is_suspended",false)
 .order("created_at",{ascending:false})
 .limit(100);
 
 stores=r.error?[]:r.data;
 renderStores();
 }
+
 
 
 window.openStore=async function(id){
