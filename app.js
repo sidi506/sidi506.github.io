@@ -850,8 +850,9 @@ phone:g("phone"),
 city:g("city"),
 logo_url:logo,
 cover_url:cover,
-is_published:false,
-is_featured:false
+is_published:true,
+is_featured:false,
+is_suspended:false
 });
 
 if(r.error)throw r.error;
@@ -859,7 +860,7 @@ if(r.error)throw r.error;
 $("modalbody").innerHTML=`
 <div style="padding:20px;text-align:center">
 <h2>🎉 تم إنشاء متجرك!</h2>
-<p>تم حفظ بيانات المتجر وصوره، وينتظر النشر ليظهر للزوار.</p>
+<p>أصبح متجرك منشوراً الآن! 🎉 ويمكن للزوار اكتشافه والتواصل معك.</p>
 <button onclick="closeModal()">حسناً</button>
 </div>`;
 
