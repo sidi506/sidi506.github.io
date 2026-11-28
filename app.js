@@ -119,6 +119,8 @@ ${phone?`
 <a class="btn" target="_blank" rel="noopener"
 href="https://wa.me/${phone}">${t.contact}</a>`:""}
 
+${storeButton}
+
 <a class="btn map" target="_blank" rel="noopener"
 href="${mapUrl}">${t.map}</a>
 
