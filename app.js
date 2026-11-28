@@ -575,8 +575,19 @@ renderStores();
 
 window.openStore=async function(id){
 
-const s=typeof id==="object"?id:stores.find(x=>String(x.id)===String(id));
-if(!s)return;
+
+const storeId=typeof id==="object"?id.id:id;
+
+const check=await sb.from("seller_stores")
+.select("*")
+.eq("id",storeId)
+.eq("is_published",true)
+.eq("is_suspended",false)
+.maybeSingle();
+
+const s=check.data;
+if(check.error||!s)return;
+  
 
 const primary=/^#[0-9a-fA-F]{6}$/.test(s.theme_color||"")
 ?s.theme_color:"#0a7d3b";
