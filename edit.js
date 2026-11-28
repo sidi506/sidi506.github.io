@@ -37,25 +37,85 @@ window.renderModal=function(){
 if(editingId&&user){renderEdit();}else{editingId=null;_rm();}
 };
 
+
 function renderEdit(){
-var p=(products||[]).find(function(x){return x.id===editingId;});
-if(!p){editingId=null;_rm();return;}
-var t=T[lang],e=tx();
-function opts(o,sel){return Object.keys(o).map(function(k){return '<option value="'+k+'"'+(k===sel?' selected':'')+'>'+o[k]+'</option>';}).join("");}
-var cur=p.image_url?'<img src="'+esc(p.image_url)+'" alt="" style="width:90px;height:90px;object-fit:cover;border-radius:10px;display:block;margin:6px 0">':"";
-$("modalbody").innerHTML='<h2>'+e.title+'</h2><form onsubmit="saveEdit(event)">'+
-'<input name="ptitle" placeholder="'+t.pname+'" maxlength="100" value="'+esc(p.title)+'" required>'+
-'<textarea name="pdesc" placeholder="'+t.pdesc+'" maxlength="500">'+esc(p.description)+'</textarea>'+
-'<input name="pprice" type="number" min="0" step="any" placeholder="'+t.pprice+'" value="'+esc(p.price)+'" required>'+
-'<select name="pcat">'+opts(t.cats,p.category)+'</select>'+
-'<select name="pcity">'+opts(t.cities,p.city)+'</select>'+
-'<input name="pplace" placeholder="'+t.pplace+'" maxlength="60" value="'+esc(p.place)+'">'+
-'<input name="pphone" type="tel" placeholder="'+t.pphone+'" value="'+esc(p.phone)+'" required>'+
-'<label>'+t.pimg+'</label>'+cur+
-'<input name="pimage" type="file" accept="image/*">'+
-'<div class="note" style="color:#5f6b64">'+e.keep+'</div>'+
-'<button type="submit">'+e.save+'</button></form><div id="note" class="note"></div>';
+
+var p=(products||[]).find(function(x){
+return x.id===editingId;
+});
+
+if(!p){
+editingId=null;
+_rm();
+return;
 }
+
+var t=T[lang],e=tx();
+
+function opts(o,sel){
+return Object.keys(o).map(function(k){
+return '<option value="'+k+'"'+
+(k===sel?' selected':'')+'>'+o[k]+'</option>';
+}).join("");
+}
+
+var images=Array.isArray(p.image_urls)&&p.image_urls.length
+?p.image_urls.filter(Boolean)
+:(p.image_url?[p.image_url]:[]);
+
+window.editProductImages=images.slice();
+
+function imageHTML(){
+return window.editProductImages.map(function(url,i){
+return '<div style="display:inline-block;position:relative;margin:5px">'+
+'<img src="'+esc(url)+'" style="width:75px;height:75px;object-fit:cover;border-radius:9px">'+
+'<button type="button" onclick="removeEditImage('+i+')" style="position:absolute;top:-7px;right:-7px;background:#c62828;color:white;border:0;border-radius:50%;width:25px;height:25px">×</button>'+
+'</div>';
+}).join("");
+}
+
+$("modalbody").innerHTML=
+'<h2>'+e.title+'</h2>'+
+'<form onsubmit="saveEdit(event)">'+
+
+'<input name="ptitle" placeholder="'+t.pname+'" maxlength="100" value="'+esc(p.title)+'" required>'+
+
+'<textarea name="pdesc" placeholder="'+t.pdesc+'" maxlength="500">'+esc(p.description)+'</textarea>'+
+
+'<input name="pprice" type="number" min="0" step="any" placeholder="'+t.pprice+'" value="'+esc(p.price)+'" required>'+
+
+'<select name="pcat">'+opts(t.cats,p.category)+'</select>'+
+
+'<select name="pcity">'+opts(t.cities,p.city)+'</select>'+
+
+'<input name="pplace" placeholder="'+t.pplace+'" maxlength="60" value="'+esc(p.place)+'">'+
+
+'<input name="pphone" type="tel" placeholder="'+t.pphone+'" value="'+esc(p.phone)+'" required>'+
+
+'<hr><h3>📷 صور المنتج</h3>'+
+
+'<div id="editImagesPreview">'+imageHTML()+'</div>'+
+
+'<label>إضافة صور جديدة (الحد الأقصى 5 صور إجمالاً)</label>'+
+
+'<input name="pimages" type="file" accept="image/*" multiple>'+
+
+'<div class="note" style="color:#5f6b64">يمكنك حذف أي صورة بالضغط على ×، والاحتفاظ ببقية الصور.</div>'+
+
+'<button type="submit">'+e.save+'</button>'+
+'</form>'+
+'<div id="note" class="note"></div>';
+
+window.removeEditImage=function(index){
+
+window.editProductImages.splice(index,1);
+
+$("editImagesPreview").innerHTML=imageHTML();
+
+};
+
+}
+  
 
 window.saveEdit=async function(ev){
 ev.preventDefault();
