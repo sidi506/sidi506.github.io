@@ -92,7 +92,8 @@ const gallery=images.length?`
 <img id="productMainImage"
 src="${esc(images[0])}"
 alt="${esc(p.title)}"
-style="width:100%;max-height:300px;object-fit:contain;border-radius:12px">
+onclick="openFullProductImage(window.productImageIndex||0)"
+style="width:100%;max-height:300px;object-fit:contain;border-radius:12px;cursor:zoom-in">
 
 ${images.length>1?`
 <div style="display:flex;justify-content:center;align-items:center;gap:20px;margin:12px">
@@ -130,6 +131,76 @@ href="${mapUrl}">${t.map}</a>
 $("modal").style.display="block";
 };
 
+  
+window.openFullProductImage=function(index){
+
+const images=window.productImages||[];
+if(!images.length)return;
+
+let current=Math.max(0,Math.min(index,images.length-1));
+let startX=0;
+
+const viewer=document.createElement("div");
+viewer.id="fullProductViewer";
+viewer.style.cssText=`
+position:fixed;
+inset:0;
+z-index:99999;
+background:rgba(0,0,0,.96);
+display:flex;
+align-items:center;
+justify-content:center;
+touch-action:pan-y;
+`;
+
+viewer.innerHTML=`
+<button id="closeFullImage"
+style="position:absolute;top:20px;right:20px;background:#ffffff22;color:white;border:0;border-radius:50%;width:42px;height:42px;font-size:24px">×</button>
+
+<div id="fullImageCount"
+style="position:absolute;top:28px;left:20px;color:white;font-size:14px">
+</div>
+
+<img id="fullImage"
+style="max-width:100%;max-height:85%;object-fit:contain;user-select:none">
+`;
+
+document.body.appendChild(viewer);
+
+const img=viewer.querySelector("#fullImage");
+const count=viewer.querySelector("#fullImageCount");
+
+function update(){
+img.src=images[current];
+count.textContent=(current+1)+" / "+images.length;
+}
+
+update();
+
+viewer.querySelector("#closeFullImage").onclick=()=>{
+viewer.remove();
+};
+
+viewer.addEventListener("click",e=>{
+if(e.target===viewer)viewer.remove();
+});
+
+viewer.addEventListener("touchstart",e=>{
+startX=e.touches[0].clientX;
+},{passive:true});
+
+viewer.addEventListener("touchend",e=>{
+const diff=e.changedTouches[0].clientX-startX;
+
+if(Math.abs(diff)<50)return;
+
+if(diff<0&&current<images.length-1)current++;
+else if(diff>0&&current>0)current--;
+
+update();
+},{passive:true});
+
+};
   
 
 
