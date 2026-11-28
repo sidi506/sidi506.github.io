@@ -367,7 +367,7 @@ const t=T[lang];
 $("acct").innerHTML=user?
 `
 ${isAdmin?'<span style="background:#d4edda;color:#155724;padding:7px 12px;border-radius:20px;font-weight:bold">👑 المدير</span><button onclick="openAdmin()">لوحة التحكم</button>':""}
-<button onclick="openMyStore()">🏪 متجري</button>
+<button onclick="openSellerDashboard()">🏪 لوحة متجري</button>
 <button onclick="openModal()">${t.add}</button>
 <button onclick="logout()">${t.logout}</button>
 `:
