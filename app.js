@@ -54,7 +54,7 @@ $("productMainImage").src=images[window.productImageIndex];
 $("productImageCount").textContent=(window.productImageIndex+1)+" / "+images.length;
 };
 
-window.openProduct=function(id){
+window.openProduct=async function(id){
 
 const p=products?.find(x=>String(x.id)===String(id));
 if(!p)return;
@@ -68,7 +68,17 @@ const mapUrl="https://www.google.com/maps/search/?api=1&query="+
 encodeURIComponent((p.place?p.place+" ":"")+cityEn+" Mauritania");
 
 const phone=String(p.phone||"").replace(/\D/g,"");
+const storeResult=await sb.from("seller_stores")
+.select("id")
+.eq("user_id",p.user_id)
+.eq("is_published",true)
+.maybeSingle();
 
+const storeButton=storeResult.data?
+`<button class="btn" onclick="openStore('${esc(storeResult.data.id)}')">
+🏪 زيارة متجر البائع
+</button>`:"";
+  
 const images=Array.isArray(p.image_urls)&&p.image_urls.length
 ?p.image_urls.filter(Boolean)
 :(p.image_url?[p.image_url]:[]);
