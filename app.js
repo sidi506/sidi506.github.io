@@ -1144,5 +1144,31 @@ btn.textContent="حفظ التعديلات";
 // ===== نهاية نظام المتاجر =====
 
 loadStores();
+
+// ===== فتح المتجر مباشرة عبر الرابط =====
+
+(async function(){
+
+const params=new URLSearchParams(window.location.search);
+const slug=params.get("store");
+
+if(!slug)return;
+
+const r=await sb.from("seller_stores")
+.select("id")
+.eq("slug",slug)
+.eq("is_published",true)
+.eq("is_suspended",false)
+.maybeSingle();
+
+if(r.error||!r.data){
+alert("هذا المتجر غير متاح حالياً");
+return;
+}
+
+window.openStore(r.data.id);
+
+})();
+
 // END
   
